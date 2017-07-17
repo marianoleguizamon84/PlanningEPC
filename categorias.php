@@ -14,7 +14,7 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
 
  <h2>Categorias</h2>
 
- <table class="admin_table display">
+ <table class="admin_table display" style="margin-bottom: 1em">
    <tr>
      <th>Categoria</th>
      <th>Color</th>
@@ -22,31 +22,32 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
    <?php foreach ($result as $value) {
      echo "<tr>";
      echo "<td onclick=editar(" . $value[id] . ")>" . $value[categoria] . "</td>";
-     echo "<td><div class='color' title='Test' style='background-color: " . $value[color] . ";'></div></td>";
+     echo "<td><div class='color' title='".$value[categoria]."' style='background-color: " . $value[color] . ";'></div></td>";
      echo "</tr>";
    } ?>
  </table>
 
- </div>
- <button type="button" name="button" id="agregar" class="btn_agregar">Agregar Categoria</button>
+<div style="margin-bottom: 2em;">
+  <button type="button" name="button" id="agregar" class="btn_agregar">Agregar Categoria</button>
+</div>
 
 
  <div id="myModal" class="modal">
 
    <div class="modal-content">
      <form class="form" action="./categorias-subir.php" method="post">
-       <h3>Editar Categoria</h3>
+       <h3 id="modal_Titulo">Editar Categoria</h3>
        <div class="campo">
          <label for="ide">Id:</label>
-         <input id="ide" type="number" name="ide" readonly>
+         <input id="ide" type="number" name="ide" readonly placeholder="No Completar">
        </div>
        <div class="campo">
          <label for="categoria">Categoria: </label>
-         <input id="categoria" type="text" name="categoria"><br>
+         <input id="categoria" type="text" name="categoria" placeholder="Ej: Obligatoria Todas Las Maestrías, Diplomatura Comunicación Interna">
        </div>
        <div class="campo">
          <label for="color">Color: </label>
-         <input id="color" type="color" name="color"><br><br>
+         <input id="color" type="color" name="color">
        </div>
        <div class="botones">
          <input id="cancelar" type="button" value="Cancelar">
@@ -62,6 +63,7 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
    var categorias = <?php echo json_encode($result); ?>;
 
    agregar.onclick = function (){
+     document.getElementById('modal_Titulo').innerText = "Nueva Categoria"
      document.getElementById('ide').value = "";
      document.getElementById('categoria').value = "";
      document.getElementById('color').value = "";
@@ -86,6 +88,7 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
          var col = categorias[i].color;
        }
      }
+     document.getElementById('modal_Titulo').innerText = "Editar Categoria"
     document.getElementById('ide').value = id;
     document.getElementById('categoria').value = cat;
     document.getElementById('color').value = col;
@@ -93,4 +96,3 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
     modal.style.display = "block";
    }
  </script>
- <footer>Fin</footer>
