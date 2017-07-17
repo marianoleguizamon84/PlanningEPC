@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // $Id: mrbs.css.php 2399 2012-09-08 17:16:36Z cimorrison $
 
@@ -7,15 +7,15 @@ require_once "../config.inc.php";
 require_once "../functions.inc";
 require_once "../theme.inc";
 
-header("Content-type: text/css"); 
+header("Content-type: text/css");
 expires_header(60*30); // 30 minute expiry
-                                
+
 // IMPORTANT *************************************************************************************************
 // In order to avoid problems in locales where the decimal point is represented as a comma, it is important to
 //   (1) specify all PHP length variables as strings, eg $border_width = '1.5'; and not $border_width = 1.5;
 //   (2) convert PHP variables after arithmetic using number_format
 // ***********************************************************************************************************
-                                
+
 ?>
 
 
@@ -42,7 +42,7 @@ img {border: 0}
 
 a:link    {color: <?php echo $anchor_link_color ?>;    text-decoration: none; font-weight: bold}
 a:visited {color: <?php echo $anchor_visited_color ?>; text-decoration: none; font-weight: bold}
-a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration: underline; font-weight: bold} 
+a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration: underline; font-weight: bold}
 
 tr.even_row td.new {background-color: <?php echo $row_even_color ?>}
 tr.odd_row td.new {background-color: <?php echo $row_odd_color ?>}
@@ -54,7 +54,7 @@ td form {margin: 0}     /* Prevent IE from displaying margins around forms in ta
 legend {font-weight: bold; font-size: large;
     font-family: <?php echo $standard_font_family ?>;
     color: <?php echo $standard_font_color ?>}
-fieldset {margin: 0; padding: 0; border: 0; 
+fieldset {margin: 0; padding: 0; border: 0;
     border-radius: 8px;
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px}
@@ -62,19 +62,19 @@ fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
     border: 1px solid <?php echo $admin_table_border_color ?>}
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
-  
+
 table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_border_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
 .admin_table th, .admin_table td {vertical-align: middle; text-align: left;
     padding: 0.1em 8px 0.1em 8px;
     border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;}
-.admin_table th {color: <?php echo $admin_table_header_font_color ?>; 
+.admin_table th {color: <?php echo $admin_table_header_font_color ?>;
     background-color: <?php echo $admin_table_header_back_color ?>}
 .admin_table td, .admin_table th {border-color: <?php echo $admin_table_border_color ?>}
 .admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
 .admin_table td.action {text-align: center}
 .admin_table td.action div {display: inline-block}
-.admin_table td.action div div {display: table-cell} 
+.admin_table td.action div div {display: table-cell}
 
 select.room_area_select {margin-right: 0.5em}
 
@@ -97,9 +97,9 @@ $admin_form_input_width       = '10.5';   // em   (Also used in edit_area_room.p
 form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
 .form_admin fieldset {float: left; width: auto; border: 1px solid <?php echo $admin_table_border_color ?>; padding: 1em}
 .form_admin legend {font-size: small}
-.form_admin div {float: left; clear: left} 
+.form_admin div {float: left; clear: left}
 .form_admin label {
-    display: block; float: left; clear: left; 
+    display: block; float: left; clear: left;
     width: <?php echo $admin_form_label_width ?>em; min-height: 2.0em; text-align: right;
 }
 .form_admin input {
@@ -164,7 +164,7 @@ $column_month = number_format($column_month, 1, '.', '');  // (%) tidy the numbe
 div#dwm_header {width: 100%; float: left; margin-top: 1.0em; margin-bottom: 0.5em}
 div#dwm_areas  {float: left; margin-right: 2.0em}
 div#dwm_rooms  {float: left; margin-right: 2.0em}
-#dwm_header h3 {font-size: small; font-weight: normal; text-decoration: underline; 
+#dwm_header h3 {font-size: small; font-weight: normal; text-decoration: underline;
     margin-top: 0; margin-bottom: 0.5em; padding-bottom: 0}
 #dwm_header ul {list-style-type: none; padding-left: 0; margin-left: 0; margin-top: 0}
 #dwm_header li {padding-left: 0; margin-left: 0}
@@ -196,7 +196,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 // need padding put it on the contained element.
 ?>
 .dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0;
-    color: <?php echo $header_font_color ?>; 
+    color: <?php echo $header_font_color ?>;
     background-color: <?php echo $header_back_color ?>;
     border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
 .dwm_main th.first_last, .dwm_main th span {padding: 0 2px}
@@ -224,7 +224,7 @@ img.repeat_symbol {float: right; padding: 3px}
 
 <?php
 // The following section deals with the contents of the table cells in the month view.    It is designed
-// to ensure that the new booking link is active anywhere in the cell that there isn't another link, for 
+// to ensure that the new booking link is active anywhere in the cell that there isn't another link, for
 // example the link to the day in question at the top left and the bookings themselves.   It works by using
 // z-index levels and placing the new booking link at the bottom of the pile.
 //
@@ -233,18 +233,18 @@ img.repeat_symbol {float: right; padding: 3px}
 // This is because the list of bookings is in a div of its own which includes that bottom right hand corner.   One
 // could do without the container div, and then you could solve the problem, but the container div is there to
 // allow the bookings to scroll without moving the date and new booking space at the top of the cell.   Putting up
-// with the small gap at the end of odd rows is probably a small price worth paying to ensure that the date and the 
+// with the small gap at the end of odd rows is probably a small price worth paying to ensure that the date and the
 // new booking link remain visible when you scroll.]
 ?>
-div.cell_container {position: relative; float: left; width: 100%;        /* the containing div for a.new_booking */ 
+div.cell_container {position: relative; float: left; width: 100%;        /* the containing div for a.new_booking */
 <?php echo ($month_cell_scrolling ? 'height:' : 'min-height:') ?> 150px} /* NOTE:  if you change the value of (min-)height, make sure you */
                                                                          /* also change the value of height in mrbs-ielte6.css */
 .month a.new_booking {position: absolute; top: 0; left: 0; z-index: 10}  /* needs to be above the base, but below the date (monthday) */
-       
+
 div.cell_header {position: relative; width: 100%; z-index: 20;         /* needs to be above the new booking anchor */
      min-height: 20%; height: 20%; max-height: 20%; overflow: hidden}
 
-#month_main div.cell_header a {display: block; width: auto; float: left}                                                                               
+#month_main div.cell_header a {display: block; width: auto; float: left}
 #month_main div.cell_header a.monthday {font-size: medium}  /* the date in the top left corner */
 #month_main div.cell_header a.week_number {opacity: 0.5; padding: 2px 4px 0 4px}
 
@@ -264,16 +264,16 @@ foreach ($color_types as $type => $col)
 
 ?>
 
-.dwm_main#week_main th.hidden_day, .dwm_main#month_main th.hidden_day     
-    {width: <?php echo $column_hidden_width ?>%; 
-    <?php 
+.dwm_main#week_main th.hidden_day, .dwm_main#month_main th.hidden_day
+    {width: <?php echo $column_hidden_width ?>%;
+    <?php
       echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
     ?>
     }
 td.hidden_day     {background-color: <?php echo $column_hidden_color ?>; /* hidden columns (eg weekends) in the week and month views */
     font-size: medium; font-weight: bold;
     border-top: <?php echo $main_table_cell_border_width ?>px solid <?php echo $column_hidden_color ?>;
-    <?php 
+    <?php
       echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
     ?>
     }
@@ -293,7 +293,7 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 .dwm_main tr:hover td.row_labels, .dwm_main td.row_labels_hover {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
 .dwm_main#month_main td:hover.valid, .dwm_main#month_main td.valid_hover {background-color: <?php echo $row_highlight_color ?>}
 <?php
-// would be nicer to use color: inherit in the four rules below, but inherit is not supported by IE until IE8.   
+// would be nicer to use color: inherit in the four rules below, but inherit is not supported by IE until IE8.
 // inherit would mean that (1) you didn't have to specify the colour again and (2) you needn't use the tbody selector to
 // stop the header links changing colour.
 ?>
@@ -337,10 +337,10 @@ The next section generates the slot classes (i.e. slots1, slots2, etc.).   We ne
 enough of them so that they cover a booking spanning all the slots.
 
 These classes are used to control the styling of the main div in a cell in the main display table.
-By editing $clipped the styling can be set to be either 
+By editing $clipped the styling can be set to be either
 (1) CLIPPED.
 The cells are all a standard height and any content that does not fit in the cell is clipped.
-The height is a multiple of the height for a single cell, defined by $main_cell_height.   For 
+The height is a multiple of the height for a single cell, defined by $main_cell_height.   For
 example if you define the main cell height to be 1.1em high, then a booking that is only one slot long
 will be 1.1 em high and a booking two slots long will be 2.2em high, etc.
 (2) NOT CLIPPED
@@ -348,7 +348,7 @@ The cells expand to fit the content.
 
 (Although the style information could be put in an inline style declaration, this would mean that every
 cell in the display would carry the extra size of the style declaration, whereas the classes here mean
-that we only need the style declaration for each row.) 
+that we only need the style declaration for each row.)
 
 In the classes below
 - slotsN is the class for displaying a booking N slots long
@@ -367,16 +367,16 @@ In the classes below
 // table we'll need at least as many as we've got slots, since a booking could span as many as all the slots
 // (in this case controlled by a rowspan).
 $classes_required = ($times_along_top) ? 1 : $max_slots;
-for ($i=1; $i<=$classes_required; $i++) 
+for ($i=1; $i<=$classes_required; $i++)
 {
   $div_height = $main_cell_height * $i;
   $div_height = $div_height + (($i-1)*$main_table_cell_border_width);
   $div_height = (int) $div_height;    // Make absolutely sure it's an int to avoid generating invalid CSS
-  
+
   $rule = "div.slots" . $i . " {min-height: " . $div_height . "px";
   if ($clipped)
   {
-    $rule .= "; max-height: " . $div_height . "px"; 
+    $rule .= "; max-height: " . $div_height . "px";
     $rule .= "; height: "     . $div_height . "px";
   }
   $rule .= "}";
@@ -434,7 +434,7 @@ div.div_select {
 
 div.div_select.outside {
   background-color: transparent;
-}   
+}
 
 /* booking privacy status */
 .private {opacity: 0.6; font-style: italic}
@@ -546,8 +546,8 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 
 .form_general label {
     display: block; float: left; overflow: hidden;
-    min-height: <?php echo $general_label_height ?>em; 
-    width: <?php echo $general_left_col_width ?>%; 
+    min-height: <?php echo $general_label_height ?>em;
+    width: <?php echo $general_left_col_width ?>%;
     text-align: right; padding-bottom: 0.8em; font-weight: bold;
 }
 
@@ -562,7 +562,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 .form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal; overflow: visible; text-align: left}
 
 .form_general input {
-    display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
+    display: block; float: left; margin-left: <?php echo $general_gap ?>em;
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
 .edit_entry     .form_general input {width: <?php echo $edit_entry_textarea_width ?>em}
@@ -576,8 +576,8 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 
 /* font family and size needs to be the same for input and textarea as their widths are defined in ems */
 .form_general textarea {
-    display: block; float: left; 
-    width: <?php echo $edit_entry_textarea_width ?>em; height: 11em; 
+    display: block; float: left;
+    width: <?php echo $edit_entry_textarea_width ?>em; height: 11em;
     margin-left: <?php echo $general_gap ?>em; margin-bottom: 0.5em;
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
@@ -656,21 +656,21 @@ $edit_users_input_width      = '10.0';   // em
 div#form_container {width: auto; position: relative; float: left}    /* this is the containing block against which the absolute positioning works */
 #form_container input.submit {width: auto; position: absolute; bottom: 2.0em}  /* bring both buttons up          */
 form#form_edit_users {width: auto; margin-top: 2.0em}
-#form_edit_users fieldset {float: left; width: auto}  
+#form_edit_users fieldset {float: left; width: auto}
 #form_edit_users div {float: left; clear: left; width: auto}
 #form_edit_users div#edit_users_input_container {padding-bottom: 4.0em}    /* padding-bottom leaves room for the submit buttons. */
                                                                            /* Apply it to the div because applying it to the     */
                                                                            /* fieldset does not work in all browsers (eg Safari) */
 #form_edit_users label{
     display: block; float: left;
-    min-height: <?php echo $edit_users_label_height ?>em; 
-    width: <?php echo $edit_users_label_width ?>em;  
+    min-height: <?php echo $edit_users_label_height ?>em;
+    width: <?php echo $edit_users_label_width ?>em;
     text-align: right;
 }
 #form_edit_users input {
     display: block; float: left;
-    width: <?php echo $edit_users_input_width ?>em; 
-    margin-left: <?php echo $edit_users_gap ?>em; 
+    width: <?php echo $edit_users_input_width ?>em;
+    margin-left: <?php echo $edit_users_gap ?>em;
 }
 #form_edit_users select, #form_edit_users textarea {
     margin-left: <?php echo $edit_users_gap ?>em;
@@ -740,8 +740,8 @@ table.calendar {border-spacing: 0; border-collapse: collapse}
 <?php
 // set the styling for the "hidden" days in the mini-cals
 ?>
-.calendar th.hidden {background-color: <?php echo $calendar_hidden_color ?>} 
-.calendar td.hidden {background-color: <?php echo $calendar_hidden_color ?>; font-weight: bold} 
+.calendar th.hidden {background-color: <?php echo $calendar_hidden_color ?>}
+.calendar td.hidden {background-color: <?php echo $calendar_hidden_color ?>; font-weight: bold}
 .calendar a.current {font-weight: bold; color: <?php echo $highlight_font_color ?>}
 td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 td.mincals_week_number { opacity: 0.5; font-size: 60%; }
@@ -793,14 +793,14 @@ div#record_nav {font-weight: bold; margin-bottom: 1.0em}
 .help dfn {font-style: normal; font-weight: bold}
 #site_faq_contents li a {text-decoration: underline}
 div#site_faq_body {margin-top: 2.0em}
-#site_faq_body h4 {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.5em; margin-top: 0} 
+#site_faq_body h4 {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.5em; margin-top: 0}
 #site_faq_body div {padding-bottom: 0.5em}
 #site_faq_body :target {background-color: <?php echo $help_highlight_color ?>}
 
 
 /* ------------ TRAILER.INC ---------------------*/
-div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>; 
-             border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
+div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>;
+             border-bottom: 1px solid <?php echo $trailer_border_color ?>;
              float: left;
              clear: left;
              margin-top: 1.0em; margin-bottom: 1.5em;
@@ -811,7 +811,7 @@ div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>;
 .trailer_label span {margin-right: 1.0em}
 
 #trailer span.current {font-weight: bold}
-#trailer span.hidden {font-weight: normal; 
+#trailer span.hidden {font-weight: normal;
     background-color: <?php echo $body_background_color ?>;  /* hack: only necessary for IE6 to prevent blurring with opacity */
     opacity: 0.5}  /* if you change this value, change it in the IE sheets as well */
 #trailer .current a {color: <?php echo $highlight_font_color ?>}

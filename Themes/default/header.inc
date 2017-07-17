@@ -51,8 +51,6 @@ function print_theme_header($day, $month, $year, $area, $room)
 <html>
   <head>
 
-  <!-- <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
-  <link rel="stylesheet" href="./css/categoria.css">
 
   <meta charset="<?php echo get_charset(); ?>">
   <title><?php echo get_vocab("mrbs") ?></title>
@@ -210,7 +208,9 @@ function print_theme_header($day, $month, $year, $area, $room)
       echo "</td>\n";
 
       echo "<td>\n";
-      echo "<a href=\"report.php?$query_str\">" . get_vocab("report") . "</a>\n";
+      echo "<a href=\"report.php?$query_str\">" . get_vocab("report") . "</a><br>\n";
+      echo "<a href='./materias.php'>Materias</a><br>";
+      echo "<a href='./categorias.php'>Categorias</a><br>";
       echo "</td>\n";
       ?>
 

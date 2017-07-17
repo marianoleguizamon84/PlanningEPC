@@ -43,15 +43,7 @@
   text-align: right;
 }
 
-.botones input{
-  border-radius: 2px;
-}
-
-.btn_agregar {
-  display: inline-block;
-}
-
-.color{
+.color {
   width: 10px;
   height: 10px;
   border-radius: 50px;

@@ -51,6 +51,23 @@
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
+$db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
+
+$query = $db->query('SELECT * FROM mrbs_materias order by materia');
+
+$result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+
+foreach ($result as $key => $value) {
+  $array_materias[]    = $value[materia];
+  $array_description[] = "Creditos: " . $value[creditos] . "\nProfesor: " . $value[profesor] . "\nHorario: " . $value[horario];
+}
+
+// echo "<pre>";
+// var_dump($array_materias);
+// var_dump($array_description);
+// die();
+
 
 $fields = sql_field_info($tbl_entry);
 $custom_fields = array();
@@ -155,7 +172,10 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
 function create_field_entry_name($disabled=FALSE)
 {
   global $name, $select_options, $maxlength, $is_mandatory_field;
-  $materias = ['Comportamiento en las Organizaciones (Psicología Organizacional) (2 creditos)', 'Media Management (3 creditos)', 'Metodología de la Investigación (2 créditos)', 'Discurso Organizacional y Públicos (3 creditos)', 'Diplomatura de Comunicación no Verbal', 'Experiencia de Marca', 'Gestión del Conocimiento', 'Negociación', 'Análisis del Contexto Mediático', 'Estrategia de Campañas Electorales', 'Programa de Comunicación para las Organizaciones de la Sociedad Civil (COSC) (3 Creditos)'];
+  global $array_materias;
+
+
+  // $materias = ['Comportamiento en las Organizaciones (Psicología Organizacional) (2 creditos)', 'Media Management (3 creditos)', 'Metodología de la Investigación (2 créditos)', 'Discurso Organizacional y Públicos (3 creditos)', 'Diplomatura de Comunicación no Verbal', 'Experiencia de Marca', 'Gestión del Conocimiento', 'Negociación', 'Análisis del Contexto Mediático', 'Estrategia de Campañas Electorales', 'Programa de Comunicación para las Organizaciones de la Sociedad Civil (COSC) (3 Creditos)'];
 
   echo "<div id=\"div_name\">\n";
   $label_text = get_vocab("namebooker") . ":";
@@ -173,8 +193,7 @@ function create_field_entry_name($disabled=FALSE)
     // Original
     // generate_input($label_text, 'name', $name, $disabled, $maxlength['entry.name'], 'type="text" required pattern="' . REGEX_TEXT_POS . '"');
 
-
-    generate_select('Materia:', 'name', $name, $materias);
+    generate_select('Materia:', 'name', $name, $array_materias);
 
 
     //generate_input($label_text, 'name', $name, $disabled, $maxlength['entry.name'], 'required pattern="[\S]+.*"');
@@ -188,8 +207,8 @@ window.onload = function () {
   document.getElementById("name").addEventListener("change", cambiarDescripcion);
 };
 function cambiarDescripcion(){
-  var materias = ['Comportamiento en las Organizaciones (Psicología Organizacional) (2 creditos)', 'Media Management (3 creditos)', 'Metodología de la Investigación (2 créditos)', 'Discurso Organizacional y Públicos (3 creditos)', 'Diplomatura de Comunicación no Verbal', 'Experiencia de Marca', 'Gestión del Conocimiento', 'Negociación', 'Análisis del Contexto Mediático', 'Estrategia de Campañas Electorales', 'Programa de Comunicación para las Organizaciones de la Sociedad Civil (COSC) (3 Creditos)'];
-  var descripciones = ['Profesor: Julio Marolla\nObligatoria MGCO - Obligatoria MCGC - Diplomatura Comunicación Interna\nHorario: 9 a 13','Profesor: Ethel Pisdiez\nObligatoria MGC - Diplomatura Media Management\nHorario: 8.30 a 13.30','Profesor: Silvina di Giano\nObligatoria MCP - MGCO - MGC - MCGC\nHorario: 15 a 20','Profesor: Damián Fernandez Pedemonte\nObligatoria MCGC - Diplomatura Comunicación Para La Gestión Del Cambio\nHorario: 9 a 13','Profesor: Sergio Rulicki\nDiplomatura De Comunicación No Verbal\nHorario: 16 a 20','Profesor: Tito Avalos\nOptativa MGCO - MGC - MCGC - MPC\nHorario: 9 a 13','Profesor: Isabel Camio\nObligatoria MCGC - Diplomatura Comunicación Para La Gestión Del Cambio\nHorario: 9 a 13','Profesor: Oscar Rodríguez Robledo\nOptativa MGCO - MGC - MCGC - MPC\nHorario: 15 a 20','Profesor: Adriana Amado\nObligatoria MCP\nHorario: 9 a 13','Profesor: Ismael Crespo\nObligatoria MCP - Diplomatura Comunicación Política\nHorario: 15 a 20','Profesor: Roxana Fantín (coordinadora)\nPrograma ejecutivo\nHorario: 9 a 13'];
+  var materias = <?php echo json_encode($array_materias); ?>;
+  var descripciones = <?php echo json_encode($array_description); ?>;
   var materia = document.getElementById('name').value;
   var num = materias.indexOf(materia);
   document.getElementById('description').innerText = descripciones[num];

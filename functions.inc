@@ -8,7 +8,7 @@
 function mrbs_default_timezone_set($timezone)
 {
   global $area_defaults;
-  
+
   if (!isset($timezone))
   {
     // to prevent people running into DST problems
@@ -99,12 +99,12 @@ function http_headers()
 function print_simple_header()
 {
   global $done_header;
- 
+
   if ($done_header)
   {
     return;
-  } 
-  
+  }
+
   http_headers();
   echo DOCTYPE;
  ?>
@@ -118,7 +118,7 @@ function print_simple_header()
   </head>
   <body>
   <?php
-  $done_header = TRUE; 
+  $done_header = TRUE;
 }
 
 
@@ -126,12 +126,12 @@ function print_simple_header()
 function print_header($day, $month, $year, $area, $room)
 {
   global $theme, $done_header;
-  
+
   if ($done_header)
   {
     return;
   }
-  
+
   // Load the print_theme_header function appropriate to the theme.    If there
   // isn't one then fall back to the default header.
   if (file_exists("Themes/$theme/header.inc"))
@@ -244,14 +244,14 @@ function toTimeString(&$dur, &$units, $translate=TRUE)
   {
     $units = "seconds";
   }
-  
+
   // Limit any floating point values to three decimal places
   if (is_float($dur))
   {
     $dur = sprintf('%.3f', $dur);
     $dur = rtrim($dur, '0');  // removes trailing zeros
   }
-  
+
   // Translate into local language if required
   if ($translate)
   {
@@ -269,7 +269,7 @@ function fromTimeString(&$units, $dur_units)
   {
     return;
   }
-  
+
   switch($dur_units)
   {
     case "years":
@@ -305,7 +305,7 @@ function toPeriodString($start_period, &$dur, &$units, $translate=TRUE)
   {
     $remainder += $max_periods - $mins_in_day;
   }
-  
+
   // We'll express the duration as an integer, in days if possible, otherwise periods
   if (($remainder == 0) || (($start_period == 0) && ($remainder == $max_periods)))
   {
@@ -329,12 +329,12 @@ function toPeriodString($start_period, &$dur, &$units, $translate=TRUE)
 function fromPeriodString($start_period, &$units, $dur_units)
 {
   global $periods;
-  
+
   if (!isset($units) || !isset($dur_units))
   {
     return;
   }
-  
+
   // First get the duration in minutes
   $max_periods = count($periods);
   if ($dur_units == "periods")
@@ -356,7 +356,7 @@ function fromPeriodString($start_period, &$units, $dur_units)
       $units = $units * 60 * 24;
     }
   }
-  
+
   // Then convert into seconds
   $units = (int) $units;
   $units = 60 * $units;
@@ -436,7 +436,7 @@ function generate_radio_group($label_text, $name, $current, $buttons)
   foreach ($buttons as $value => $token)
   {
     echo "<label>";
-    echo "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"$value\"";          
+    echo "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"$value\"";
     if ($current == $value)
     {
       echo " checked=\"checked\"";
@@ -451,7 +451,7 @@ function generate_radio_group($label_text, $name, $current, $buttons)
 // Generates a select box from $options, an array of options
 // If $disabled is TRUE, then the select box is disabled and a hidden
 // input is generated to pass through $current
-function generate_select($label_text, $name, $current, $options, 
+function generate_select($label_text, $name, $current, $options,
                          $mandatory = FALSE, $disabled=FALSE)
 {
   // generate the HTML
@@ -459,7 +459,7 @@ function generate_select($label_text, $name, $current, $options,
   $html .= "<select id=\"$name\" name=\"$name\"";
   $html .= ($disabled) ? " disabled=\"disabled\"" : "";
   $html .= ($mandatory) ? " required" : "";
-  $html .= ">\n";
+  $html .= "style='width: 600px'>\n";
 
   // We can cope with both associative and ordinary arrays
   if (is_assoc($options))
@@ -487,7 +487,7 @@ function generate_select($label_text, $name, $current, $options,
     $html .= "<input type=\"hidden\" name=\"$name\" value=\"".
       htmlspecialchars($current)."\">\n";
   }
-  
+
   echo $html;
 }
 
@@ -504,7 +504,7 @@ function generate_textarea($label_text, $name, $value, $disabled=FALSE, $attribu
   $html .= "<textarea id=\"$name\" name=\"$name\" rows=\"8\" cols=\"40\"";
   $html .= (isset($attributes)) ? " $attributes" : "";
   $html .= ($disabled) ? " disabled=\"disabled\"" : '';
-  $html .= ">" . htmlspecialchars($value) . "</textarea>\n";
+  $html .= "style='width: 600px' readonly>" . htmlspecialchars($value) . "</textarea>\n";
   // and a hidden input if the textarea is disabled
   if ($disabled)
   {
@@ -527,13 +527,13 @@ function generate_textarea($label_text, $name, $value, $disabled=FALSE, $attribu
 // Whether or not JavaScript is enabled the date is passed back in three separate
 // variables:  ${prefix}day, ${prefix}month and ${prefix}year
 //
-// The function passes back three separate variables, rather than a single date 
+// The function passes back three separate variables, rather than a single date
 // variable, partly for compatibility with previous implementations of genDateSelector()
 // and partly because it's easier to do this for the non-JavaScript version.
 function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FALSE)
 {
   global $strftime_format, $year_range;
-  
+
   // Make sure we've got a date
   if (empty($day) or empty($month) or empty($year))
   {
@@ -547,42 +547,42 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FA
   $day = (int) $day;
   $month = (int) $month;
   $year = (int) $year;
-  
+
   // Get a month for use with JavaScript (where the months run from 0 to 11)
   $month_js = $month - 1;
-  
+
   // First and last dates to show in year select
   $min = min($year, date("Y")) - $year_range['back'];
   $max = max($year, date("Y")) + $year_range['ahead'];
-  
+
   $datepicker_baseid = "${prefix}datepicker";
-  
+
   // We'll put the date selector in a span.    First of all we'll generate
   // day, month and year selectors.   These will be used if JavaScript is
   // disabled.    If JavaScript is enabled it will overwrite these with a
   // datepicker calendar.
   echo "<span id=\"${prefix}dateselector\">\n";
   // the day selector
-  echo "<select name=\"${prefix}day\"" . 
+  echo "<select name=\"${prefix}day\"" .
        ($disabled ? " disabled=\"disabled\"" : "") .
-       ">\n"; 
+       ">\n";
   for ($i = 1; $i <= 31; $i++)
   {
     echo "<option" . ($i == $day ? " selected=\"selected\"" : "") . ">$i</option>\n";
   }
   echo "</select>\n";
   // the month selector
-  echo "<select name=\"${prefix}month\"" . 
+  echo "<select name=\"${prefix}month\"" .
        ($disabled ? " disabled=\"disabled\"" : "") .
-       ">\n"; 
+       ">\n";
   for ($i = 1; $i <= 12; $i++)
   {
-    $m = utf8_strftime($strftime_format['mon'], mktime(0, 0, 0, $i, 1, $year));  
+    $m = utf8_strftime($strftime_format['mon'], mktime(0, 0, 0, $i, 1, $year));
     echo "<option value=\"$i\"" . ($i == $month ? " selected=\"selected\"" : "") . ">$m</option>\n";
   }
   echo "</select>\n";
   // the year selector
-  echo "<select name=\"${prefix}year\"" . 
+  echo "<select name=\"${prefix}year\"" .
        ($disabled ? " disabled=\"disabled\"" : "") .
        ">\n";
   for ($i = $min; $i <= $max; $i++)
@@ -598,7 +598,7 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FA
     echo "<input type=\"hidden\" name=\"${prefix}year\" value=\"$year\">\n";
   }
   echo "</span>\n";
-  
+
   // Now use JavaScript to overwrite the contents of this span with a datepicker calendar
   ?>
   <script type="text/javascript">
@@ -628,8 +628,8 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FA
     document.getElementById(<?php echo "'${datepicker_baseid}_alt_year'" ?>).value = <?php echo $year ?>;
     $(".ui-datepicker").draggable();
   });
- 
-  
+
+
   var dateselector = document.getElementById(<?php echo "'${prefix}dateselector'" ?>);
   var datepicker_html = '<input class="date" type="text" id="<?php echo $datepicker_baseid ?>">\n';
   <?php
@@ -649,7 +649,7 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FA
   datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_month" name="<?php echo $prefix ?>month">\n';
   datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_year" name="<?php echo $prefix ?>year">\n';
   dateselector.innerHTML = datepicker_html;
-  
+
   </script>
   <?php
 }
@@ -692,7 +692,7 @@ function fatal_error($need_header, $message, $show_form_data = true)
 
 // Escape a PHP string for use in JavaScript
 //
-// Based on a function contributed by kongaspar at gmail dot com at 
+// Based on a function contributed by kongaspar at gmail dot com at
 // http://www.php.net/manual/function.addcslashes.php
 function escape_js($str)
 {
@@ -724,7 +724,7 @@ function unslashes($s)
 function get_default_area()
 {
   global $tbl_area, $tbl_room, $default_room;
-  
+
   // If the $default_room is set and exists and enabled, then return the
   // corresponding area
   if (isset($default_room))
@@ -795,12 +795,12 @@ function get_area($room)
 function clean_area_row($row)
 {
   global $force_resolution, $area_defaults, $boolean_fields, $private_override_options;
-  
+
   foreach ($row as $key => $value)
   {
     // If the "per area" setting is in the database, then use that.   Otherwise
     // just stick with the default setting from the config file.
-    // (don't use the database setting if $force_resolution is TRUE 
+    // (don't use the database setting if $force_resolution is TRUE
     // and we're looking at the resolution field)
     if (($key != 'resolution') || empty($force_resolution))
     {
@@ -829,7 +829,7 @@ function clean_area_row($row)
     $message = "Invalid value for 'resolution' in the area table.   Using ${row['resolution']} seconds.";
     trigger_error($message, E_USER_WARNING);
   }
-  
+
   return $row;
 }
 
@@ -848,13 +848,13 @@ function get_area_settings($area)
   global $confirmation_enabled, $confirmed_default, $timezone;
   global $max_per_interval_area_enabled, $max_per_interval_area;
   global $interval_types;
-  
+
   if (empty($area))
   {
     $area = get_default_area();
   }
-  
-  // Get all the "per area" config settings                  
+
+  // Get all the "per area" config settings
   $sql = "SELECT timezone, resolution, default_duration, default_duration_all_day,
                  morningstarts, morningstarts_minutes,
                  eveningends, eveningends_minutes,
@@ -868,8 +868,8 @@ function get_area_settings($area)
                  max_per_future_enabled, max_per_future,
                  approval_enabled, reminders_enabled, enable_periods,
                  confirmation_enabled, confirmed_default
-          FROM $tbl_area 
-          WHERE id=$area 
+          FROM $tbl_area
+          WHERE id=$area
           LIMIT 1";
   $res = sql_query($sql);
   if (!$res || (sql_count($res) == 0))
@@ -889,7 +889,7 @@ function get_area_settings($area)
   }
   // Set the timezone
   mrbs_default_timezone_set($timezone);
-  
+
   // Set the $max_per_interval_area_enabled and $max_per_interval_area arrays,
   // which are handled slightly differently
   foreach ($interval_types as $interval_type)
@@ -899,13 +899,13 @@ function get_area_settings($area)
     $var = "max_per_${interval_type}";
     $max_per_interval_area[$interval_type] = $$var;
   }
-  
+
   // If we're using periods then set the rsolution to 60 seconds
   if ($enable_periods)
   {
     $resolution = 60;
   }
-  
+
 }
 
 
@@ -914,7 +914,7 @@ function get_area_settings($area)
 function some_area_predicate($field)
 {
   global $area_defaults;
-  
+
   $predicate = "(($field IS NOT NULL) AND ($field > 0))";
   if ($area_defaults[$field])
   {
@@ -931,11 +931,11 @@ function some_area_predicate($field)
 function some_area($field, $enabled=FALSE)
 {
   global $tbl_area;
-  
-  $predicate = some_area_predicate($field);   
+
+  $predicate = some_area_predicate($field);
   $sql = "SELECT COUNT(*) FROM $tbl_area WHERE $predicate";
   $sql .= ($enabled) ? " AND disabled=0" : "";
-  $sql .= " LIMIT 1";                                
+  $sql .= " LIMIT 1";
   return (sql_query1($sql) > 0);
 }
 
@@ -943,7 +943,7 @@ function some_area($field, $enabled=FALSE)
 function day_name($daynumber)
 {
   global $strftime_format;
-  
+
   return utf8_strftime($strftime_format['dayname'],
                        mktime(0,0,0,1,2+$daynumber,2000));
 }
@@ -955,7 +955,7 @@ function day_name($daynumber)
 function get_rep_day_list($rep_opt)
 {
   global $weekstarts;
-  
+
   $rep_day_list = "";
   for ($i = 0; $i < 7; $i++)
   {
@@ -972,7 +972,7 @@ function get_rep_day_list($rep_opt)
 function hour_min_format()
 {
   global $twentyfourhour_format, $strftime_format;
-  
+
   if ($twentyfourhour_format)
   {
     return $strftime_format['time24'];
@@ -1049,7 +1049,7 @@ function mrbs_nl2br($string)
 
 // Version of the standard PHP function html_entity_decode()
 // Although html_entity_decode() was introduced in PHP 4.3.0, support for
-// multi-byte character sets was only introduced in PHP 5.0.0.   
+// multi-byte character sets was only introduced in PHP 5.0.0.
 // So if we're running PHP5 or higher we'll use the standard
 // PHP function; otherwise we'll do the best we can.   At the moment
 // we just replace &nbsp; with an ordinary space, which
@@ -1127,7 +1127,7 @@ function show_colour_key()
     "title=\"$value\">\n";        // but put the name in the title so you can still read it all if you hover over it
     echo "$value</div></td>\n";
   }
-  // If there is more than one row and the bottom row isn't complete then 
+  // If there is more than one row and the bottom row isn't complete then
   // pad it out with a single merged cell
   if ((count($booking_types) > $table_width) && ($n < $table_width))
   {
@@ -1163,9 +1163,9 @@ function round_t_up($t, $resolution, $am7)
 function make_area_select_html($link, $current, $year, $month, $day)
 {
   global $tbl_area, $area_list_format;
-  
+
   $out_html = '';
-  $sql = "SELECT id, area_name 
+  $sql = "SELECT id, area_name
             FROM $tbl_area
            WHERE disabled=0
         ORDER BY area_name";
@@ -1215,7 +1215,7 @@ function make_area_select_html($link, $current, $year, $month, $day)
 function make_room_select_html ($link, $area, $current, $year, $month, $day)
 {
   global $tbl_room, $tbl_area, $area_list_format;
-  
+
   $out_html = '';
   $sql = "SELECT R.id, R.room_name
             FROM $tbl_room R, $tbl_area A
@@ -1236,7 +1236,7 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
       $out_html .= "<form id=\"roomChangeForm\" method=\"get\" action=\"$link\">\n" .
                    "<div>\n" .
                    "<select class=\"room_area_select\" name=\"room\" onchange=\"this.form.submit()\">\n";
-  
+
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
         $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
@@ -1269,13 +1269,13 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
 } // end make_room_select_html
 
 
-// returns the numeric day of the week (0-6) in terms of the MRBS week as defined by 
+// returns the numeric day of the week (0-6) in terms of the MRBS week as defined by
 // $weekstarts.   For example if $weekstarts is set to 2 (Tuesday) and a $time for
 // a Wednesday is given, then 1 is returned.
 function day_of_MRBS_week($time)
 {
   global $weekstarts;
-  
+
   return (date('w', $time) - $weekstarts + 7) % 7;
 }
 
@@ -1291,16 +1291,16 @@ function is_dst ( $month, $day, $year, $hour="-1" )
   {
     return( -1 );
   }
-   
+
   // entering DST
-  if( !date( "I", mktime(12, 0, 0, $month, $day-1, $year)) && 
+  if( !date( "I", mktime(12, 0, 0, $month, $day-1, $year)) &&
       date( "I", mktime(12, 0, 0, $month, $day, $year)))
   {
-    return( 0 ); 
+    return( 0 );
   }
 
   // leaving DST
-  else if( date( "I", mktime(12, 0, 0, $month, $day-1, $year)) && 
+  else if( date( "I", mktime(12, 0, 0, $month, $day-1, $year)) &&
            !date( "I", mktime(12, 0, 0, $month, $day, $year)))
   {
     return( 1 );
@@ -1334,12 +1334,12 @@ function cross_dst ( $start, $end )
   return $modification;
 }
 
-// If $time falls on a non-working day, shift it back to the end of the last 
+// If $time falls on a non-working day, shift it back to the end of the last
 // working day before that
 function shift_to_workday($time)
 {
   global $working_days;
-  
+
   $dow = date('w', $time);  // get the day of the week
   $skip_back = 0;           // number of days to skip back
   // work out how many days to skip back to get to a working day
@@ -1362,13 +1362,13 @@ function shift_to_workday($time)
   }
   return $time;
 }
-  
+
 // Returns the difference in seconds between two timestamps, $now and $then
 // It gives $now - $then, less any seconds that were part of a non-working day
 function working_time_diff($now, $then)
 {
   global $working_days;
-  
+
   // Deal with the easy case
   if ($now == $then)
   {
@@ -1391,7 +1391,7 @@ function working_time_diff($now, $then)
   // For the rest we're going to assume that $last comes after $first
   $last = max($now, $then);
   $first = min($now, $then);
-  
+
   // first of all, if $last or $first fall on a non-working day, shift
   // them back to the end of the last working day
   $last = shift_to_workday($last);
@@ -1401,7 +1401,7 @@ function working_time_diff($now, $then)
   // Then we have to deduct all the non-working days in between.   This will be
   // (a) the number of non-working days in the whole weeks between them +
   // (b) the number of non-working days in the part week
-  
+
   // First let's calculate (a)
   $last = mktime(12, 0, 0, date('n', $last), date('j', $last), date('Y', $last));
   $first = mktime(12, 0, 0, date('n', $first), date('j', $first), date('Y', $first));
@@ -1412,7 +1412,7 @@ function working_time_diff($now, $then)
   // days of the week that are left
   $last_dow = date('w', $last);
   $first_dow = date('w', $first);
-  
+
   while ($first_dow != $last_dow)
   {
     $first_dow = ($first_dow + 1) % 7;
@@ -1424,13 +1424,13 @@ function working_time_diff($now, $then)
 
   // So now subtract the number of weekend seconds
   $diff = $diff - ($non_working_days * 60*60*24);
-  
+
   // Finally reverse the difference if $now was in fact before $then
   if ($now < $then)
   {
     $diff = -$diff;
   }
-  
+
   return (int) $diff;
 }
 
@@ -1443,7 +1443,7 @@ function is_hidden_day ($dow)
 
 // returns true if event should be considered private based on
 // config settings and event's privacy status (passed to function)
-function is_private_event($privacy_status) 
+function is_private_event($privacy_status)
 {
   global $private_override;
   if ($private_override == "private" )
@@ -1460,7 +1460,7 @@ function is_private_event($privacy_status)
 
 // Generate a globally unique id
 //
-// We will generate a uid of the form "MRBS-uniqid-MD5hash@domain_name" 
+// We will generate a uid of the form "MRBS-uniqid-MD5hash@domain_name"
 // where uniqid is time based and is generated by uniqid() and the
 // MD5hash is the first 8 characters of the MD5 hash of $str concatenated
 // with a random number.
@@ -1498,7 +1498,7 @@ function is_assoc($arr)
 
 // Checks whether we are running as a CLI module
 //
-// Based on code from mniewerth at ultimediaos dot com at 
+// Based on code from mniewerth at ultimediaos dot com at
 // http://php.net/manual/features.commandline.php
 function is_cgi()
 {
@@ -1508,16 +1508,16 @@ function is_cgi()
 
 // Checks whether we are running from the CLI
 //
-// Based on code from mniewerth at ultimediaos dot com at 
+// Based on code from mniewerth at ultimediaos dot com at
 // http://php.net/manual/features.commandline.php
 function is_cli()
 {
   global $allow_cli;
-  
+
   if (!$allow_cli)
   {
     return FALSE;
-    
+
   }
   if (defined('STDIN'))
   {
