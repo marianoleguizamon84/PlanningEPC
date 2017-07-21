@@ -25,9 +25,9 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
    <?php foreach ($result as $value) {
      echo "<tr>";
      echo "<td><a href='./materias-subir.php?id=".$value[id]."'>" . $value[materia] . "</a></td>";
-     echo "<td>" . $value[creditos] . "</td>";
+     echo "<td style='text-align: center'>" . $value[creditos] . "</td>";
      echo "<td>" . $value[profesor] . "</td>";
-     echo "<td>" . $value[horario] . "</td>";
+     echo "<td style='text-align: center'>" . $value[horario] . "</td>";
      echo "<td></td>";
      echo "</tr>";
    } ?>

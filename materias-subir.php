@@ -27,8 +27,6 @@ if ($_GET[id] == 0){
   $profesor = "";
   $horario  = "";
   } else {
-    // try{
-      // $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
 
        $query = $db->query('SELECT * FROM mrbs_materias where id=' . $_GET[id]);
 
@@ -39,36 +37,36 @@ if ($_GET[id] == 0){
        $creditos = $result[0][creditos];
        $profesor = $result[0][profesor];
        $horario  = $result[0][horario];
-      //   }
-      // catch(PDOException $e)
-      //   {
-      //   echo $sql . "<br>" . $e->getMessage();
-      //   }
 
 }
 
 if ($_POST[materia] != ""){
 
-  // try{
-    // $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
-    // $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // echo "<pre>";
+    // var_dump($_POST[categorias]);
+    // die();
+
     if ($_POST[id] == ""){
       $sql = "INSERT INTO mrbs_materias (materia, creditos, profesor, horario) VALUES ('". $_POST[materia] . "','" . $_POST[creditos] ."','". $_POST[profesor] . "','" . $_POST[horario] ."')";
       $db->exec($sql);
+      $nuevo_id = $db->lastInsertId();
+      $sql2 = "";
+      foreach ($_POST[categorias] as $value) {
+        $sql2 =  $sql2 . "INSERT INTO mrbs_mat_cat (materia_id, categoria_id) VALUES (".$nuevo_id.",".$value.");";
+      }
+      $db->exec($sql2);
       header("Location: ./materias.php");
       exit;
     } else {
       $sql = "UPDATE mrbs_materias SET materia='". $_POST[materia] ."', creditos='" . $_POST[creditos] . "', profesor='" . $_POST[profesor] . "', horario='" . $_POST[horario] . "' WHERE id=" . $_POST[id];
-      // die($sql);
       $stmt = $db->prepare($sql);
       $stmt->execute();
+      //Buscar en la tabla las categorias que tiene y luego comparar.
+      
+
       header("Location: ./materias.php");
       exit;
       }
-    // }
-    // catch(PDOException $e) {
-    //   echo $sql . "<br>" . $e->getMessage();
-    // }
 }
  ?>
 
@@ -109,7 +107,7 @@ if ($_POST[materia] != ""){
          <?php
          foreach ($categorias as $key => $value) {
            echo "<label style='width:28%'>";
-           echo "<input type='checkbox' name='categorias' value='". $value[id] ."'>" . $value[categoria];
+           echo "<input type='checkbox' name='categorias[]' value='". $value[id] ."'>" . $value[categoria];
            echo "</label>";
          }
          ?>

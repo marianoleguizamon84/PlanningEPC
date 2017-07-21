@@ -21,7 +21,7 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
    </tr>
    <?php foreach ($result as $value) {
      echo "<tr>";
-     echo "<td onclick=editar(" . $value[id] . ")>" . $value[categoria] . "</td>";
+     echo "<td style='cursor:pointer' onclick=editar(" . $value[id] . ")>" . $value[categoria] . "</td>";
      echo "<td><div class='color' title='".$value[categoria]."' style='background-color: " . $value[color] . ";'></div></td>";
      echo "</tr>";
    } ?>
