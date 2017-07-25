@@ -7,15 +7,9 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
 
    $query = $db->query('SELECT * FROM mrbs_materias order by materia');
-
    $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-   $query = $db->query('SELECT * FROM mrbs_categorias');
-
-   $categorias = $query->fetchAll(PDO::FETCH_ASSOC);
-
-   $query = $db->query('SELECT * FROM mrbs_mat_cat');
-
+   $query = $db->query('SELECT * FROM mrbs_mat_cat JOIN mrbs_categorias ON categoria_id=mrbs_categorias.id');
    $cat_mat = $query->fetchAll(PDO::FETCH_ASSOC);
 
  ?>
@@ -37,19 +31,15 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
      echo "<td>" . $value[profesor] . "</td>";
      echo "<td style='text-align: center'>" . $value[horario] . "</td>";
      echo "<td style='display: inline-flex; align-items: center'>";
-    foreach ($cat_mat as $value_cat) {
-      if ($value_cat[materia_id] == $value[id]) {
-        foreach ($categorias as $categoria) {
-          if ($categoria[id] == $value_cat[categoria_id]) {
-            $nom = $categoria[categoria];
-            $col = $categoria[color];
-          }
+     foreach ($cat_mat as $value_cat) {
+       if ($value_cat[materia_id] == $value[id]) {
+          $nom = $value_cat[categoria];
+          $col = $value_cat[color];
+          echo "<div class='color' title='" . $nom . "' style='background-color: " . $col . "; margin-right: 4px; height: 15px; width: 15px'></div>";
         }
-        echo "<div class='color' title='" . $nom . "' style='background-color: " . $col . "; margin-right: 4px; height: 15px; width: 15px'></div>";
       }
-    }
-    echo "</td>";
-    echo "</tr>";
+     echo "</td>";
+     echo "</tr>";
    } ?>
  </table>
 

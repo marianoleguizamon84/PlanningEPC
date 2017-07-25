@@ -74,15 +74,15 @@ $mrbs_admin_email = "mleguizamon-cronon@austral.edu.ar";
 #$select_options ['entry.description'] = array('Alejandra', 'Tito');
 
 #Las letras "E" e "I" estan en el archivo systemdefaults.inc.php. Tiraba error cuando las pase a este archivo.
-$booking_types[] = "A";
-$booking_types[] = "B";
+// $booking_types[] = "A";
+// $booking_types[] = "B";
 // $booking_types[] = "C";
-$booking_types[] = "D";
+// $booking_types[] = "D";
 // $booking_types[] = "F";
-$booking_types[] = "G";
-$booking_types[] = "H";
-$booking_types[] = "J";
-$booking_types[] = "K";
+// $booking_types[] = "G";
+// $booking_types[] = "H";
+// $booking_types[] = "J";
+// $booking_types[] = "K";
 
 
 //$vocab_override["en"]["type.J"] ="Clubes";

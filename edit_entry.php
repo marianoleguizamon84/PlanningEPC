@@ -54,13 +54,24 @@ require_once "mrbs_sql.inc";
 $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
 
 $query = $db->query('SELECT * FROM mrbs_materias order by materia');
-
 $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
+$query = $db->query('SELECT * FROM mrbs_mat_cat JOIN mrbs_categorias ON categoria_id=mrbs_categorias.id');
+$categorias = $query->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($result as $key => $value) {
+// echo "<pre>";
+// var_dump($categorias);
+// die();
+
+foreach ($result as $value) {
   $array_materias[]    = $value[materia];
-  $array_description[] = "Creditos: " . $value[creditos] . "\nProfesor: " . $value[profesor] . "\nHorario: " . $value[horario];
+  $description = "Creditos: " . $value[creditos] . "\nProfesor: " . $value[profesor] . "\nHorario: " . $value[horario] . "\nCategorías:" ;
+  foreach ($categorias as $cat) {
+    if ($cat[materia_id] == $value[id]) {
+      $description = $description ."\n-" . $cat[categoria] . " (" . $cat[codigo] . ")";
+    }
+  }
+  $array_description[] = $description;
 }
 
 // echo "<pre>";
@@ -205,10 +216,14 @@ function create_field_entry_name($disabled=FALSE)
 <script type="text/javascript">
 window.onload = function () {
   document.getElementById("name").addEventListener("change", cambiarDescripcion);
+  document.getElementById('description').innerText = <?php echo json_encode($array_description[0]) ?>;
 };
-function cambiarDescripcion(){
-  var materias = <?php echo json_encode($array_materias); ?>;
-  var descripciones = <?php echo json_encode($array_description); ?>;
+function cambiarDescripcion(materias, descripciones){
+  materias = <?php echo json_encode($array_materias); ?>;
+  descripciones = <?php echo json_encode($array_description); ?>;
+  materias = materias.map(function (e) {
+    return e.trim();
+  });
   var materia = document.getElementById('name').value;
   var num = materias.indexOf(materia);
   document.getElementById('description').innerText = descripciones[num];

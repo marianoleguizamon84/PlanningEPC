@@ -33,7 +33,7 @@
 //$timezone = "Europe/London";
 
 // If you are using iCalendar notifications of bookings (see the mail settings below)
-// then the iCalendar attachment includes a definition of your timezone in 
+// then the iCalendar attachment includes a definition of your timezone in
 // VTIMEZONE format.   This defines the timezone, including the rules for Daylight
 // Saving Time transitions.    This information is included in the MRBS distribution.
 // However, as governments can change the rules periodically, MRBS will check from
@@ -127,7 +127,7 @@ $url_base = "";
  *******************/
 
 // Choose a theme for the MRBS.   The theme controls two aspects of the look and feel:
-//   (a) the styling:  the most commonly changed colours, dimensions and fonts have been 
+//   (a) the styling:  the most commonly changed colours, dimensions and fonts have been
 //       extracted from the main CSS file and put into the styling.inc file in the appropriate
 //       directory in the Themes directory.   If you want to change the colour scheme, you should
 //       be able to do it by changing the values in the theme file.    More advanced styling changes
@@ -152,7 +152,7 @@ $theme = "default";
 /*******************
  * Calendar settings
  *******************/
- 
+
 // MRBS has two different modes of operation: "times" and "periods".   "Times"
 // based bookings allow you to define regular consecutive booking slots, eg every
 // half an hour from 7.00 am to 7.00 pm.   "Periods" based bookings are useful
@@ -213,7 +213,7 @@ $max_slots = 60;
 //
 // NOTE:  MRBS assumes that the descriptions are valid HTML and can be output
 // directly without any encoding.    Please ensure that any special characters
-// are encoded, eg '&' to '&amp;', '>' to '&gt;', lower case e acute to 
+// are encoded, eg '&' to '&amp;', '>' to '&gt;', lower case e acute to
 // '&eacute;' or '&#233;', etc.
 
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
@@ -287,7 +287,7 @@ $weekstarts = 0;
 // views.   You can alternatively arrange for them to be shown as narrow, greyed-out columns
 // by editing the CSS file.   Look for $column_hidden_width in mrbs.css.php.
 //
-// [Note that although they are hidden from display in the week and month views, they 
+// [Note that although they are hidden from display in the week and month views, they
 // can still be booked from the edit_entry form and you can display the bookings by
 // jumping straight into the day view from the date selector.]
 $hidden_days = array();
@@ -367,7 +367,7 @@ $mincals_week_numbers = FALSE;
 // rooms and not many time slots.
 $times_along_top = FALSE;
 
-// To display the row labels (times, rooms or days) on the right hand side as well as the 
+// To display the row labels (times, rooms or days) on the right hand side as well as the
 // left hand side in the day and week views, set to TRUE;
 // (was called $times_right_side in earlier versions of MRBS)
 $row_labels_both_sides = FALSE;
@@ -378,7 +378,7 @@ $column_labels_both_ends = FALSE;
 
 // To display the mini caldandars at the bottom of the day week and month views
 // set this value to TRUE
-$display_calendar_bottom = FALSE; 
+$display_calendar_bottom = FALSE;
 
 // Define default starting view (month, week or day)
 // Default is day
@@ -395,9 +395,9 @@ $default_room = 0;
 // gives a table where all the rows have the same hight, regardless of content.
 // Alternatively set to FALSE if you want the cells to expand to fit the content.
 // (FALSE not supported in IE6 and IE7 due to their incomplete CSS support)
-$clipped = TRUE;                
+$clipped = TRUE;
 
-// Define clipping behaviour for the cells in the month view.                           
+// Define clipping behaviour for the cells in the month view.
 // Set to TRUE if you want the cells in the month view to scroll if there are too
 // many bookings to display; set to FALSE if you want the table cell to expand to
 // accommodate the bookings.   (NOTE: (1) scrolling doesn't work in IE6 and so the table
@@ -406,7 +406,7 @@ $clipped = TRUE;
 $month_cell_scrolling = TRUE;
 
 // Define the maximum length of a string that can be displayed in an admin table cell
-// (eg the rooms and users lists) before it is truncated.  (This is necessary because 
+// (eg the rooms and users lists) before it is truncated.  (This is necessary because
 // you don't want a cell to contain for example a 2 kbyte text string, which could happen
 // with user defined fields).
 $max_content_length = 20;  // characters
@@ -416,7 +416,7 @@ $max_content_length = 20;  // characters
 $text_input_max = 70;  // characters
 
 // For inputs that have autocomplete options, eg the area and room match inputs on
-// the report page, we can define how many characters need to be input before the 
+// the report page, we can define how many characters need to be input before the
 // options are displayed.  This enables us to prevent a huge long list of options
 // being presented.   We define the breakpoints in an array.   For example if we set
 // $autocomplete_length_breaks = array(25, 250, 2500); this means that if the number of options
@@ -446,7 +446,7 @@ $show_plus_link = FALSE;   // Change to TRUE to always show the (+) link as in
 // Note:  some settings for private bookings can be set on a per-area basis and
 // so appear in the areadefaults.inc.php file
 
-// Choose which fields should be private by setting 
+// Choose which fields should be private by setting
 // $is_private_field['tablename.columnname'] = TRUE
 // At the moment only fields in the entry table can be marked as private,
 // including custom fields, but with the exception of the following fields:
@@ -456,7 +456,7 @@ $is_private_field['entry.name'] = TRUE;
 $is_private_field['entry.description'] = TRUE;
 $is_private_field['entry.create_by'] = TRUE;
 
-                  
+
 // SETTINGS FOR APPROVING BOOKINGS - PER-AREA
 
 // These settings can all be be configured on a per-area basis, so these variables
@@ -502,7 +502,7 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 // For custom fields only (will be extended later) it is also possible to use
 // an associative array for $select_options, for example
 
-//$select_options['entry.catering'] = array('c' => 'Coffee', 
+//$select_options['entry.catering'] = array('c' => 'Coffee',
 //                                          's' => 'Sandwiches',
 //                                          'h' => 'Hot Lunch');
 
@@ -517,7 +517,7 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 // an empty string as one of the values, eg
 //
 //$select_options['entry.catering'] = array(''  => 'Please select one option',
-//                                          'c' => 'Coffee', 
+//                                          'c' => 'Coffee',
 //                                          's' => 'Sandwiches',
 //                                          'h' => 'Hot Lunch');
 
@@ -534,17 +534,17 @@ $is_mandatory_field = array();
 // booked, MRBS will just skip past those).
 $skip_default = FALSE;
 
-// $edit_entry_field_order can be used to change the order of fields in the 
-// edit_entry page. This is useful to insert custom fields somewhere other than 
-// the end. For example: To place a custom field 'in_charge' directly after the 
+// $edit_entry_field_order can be used to change the order of fields in the
+// edit_entry page. This is useful to insert custom fields somewhere other than
+// the end. For example: To place a custom field 'in_charge' directly after the
 // booking name, set the following in config.inc.php:
-// 
+//
 // $edit_entry_field_order = array('name', 'in_charge');
-// 
-// Valid entries in this array are: 'name', 'description', 'start_date', 
-// 'end_date', 'areas', 'rooms', 'type', 'confirmation_status', 
-// 'privacy_status', plus any custom fields you may have defined. Fields that 
-// are not mentionend in the array are appended at the end, in their usual 
+//
+// Valid entries in this array are: 'name', 'description', 'start_date',
+// 'end_date', 'areas', 'rooms', 'type', 'confirmation_status',
+// 'privacy_status', plus any custom fields you may have defined. Fields that
+// are not mentionend in the array are appended at the end, in their usual
 // order.
 $edit_entry_field_order = array();
 
@@ -598,7 +598,7 @@ $auth["session_php"]["session_expire_time"] = (60*60*24*30); // 30 days
 // for whom admin rights are defined here.   After that this list is ignored.
 unset($auth["admin"]);              // Include this when copying to config.inc.php
 $auth["admin"][] = "127.0.0.1";     // localhost IP address. Useful with IP sessions.
-$auth["admin"][] = "administrator"; // A user name from the user list. Useful 
+$auth["admin"][] = "administrator"; // A user name from the user list. Useful
                                     // with most other session schemes.
 //$auth["admin"][] = "10.0.0.1";
 //$auth["admin"][] = "10.0.0.2";
@@ -731,7 +731,7 @@ $ldap_email_attrib = 'mail';
 // $ldap_admin_group_dn, above.
 // This can be an array.
 $ldap_group_member_attrib = 'memberof';
-  
+
 // Set to TRUE if you want MRBS to call ldap_unbind() between successive
 // attempts to bind. Unbinding while still connected upsets some
 // LDAP servers
@@ -817,7 +817,7 @@ $mail_settings['room_admin_on_bookings'] = FALSE;  // the room administrator
 $mail_settings['booker']                 = FALSE;  // the person making the booking
 $mail_settings['book_admin_on_approval'] = FALSE;  // the booking administrator when booking approval is enabled
                                                    // (which is the MRBS admin, but this setting allows MRBS
-                                                   // to be extended to have separate booking approvers)     
+                                                   // to be extended to have separate booking approvers)
 
 // WHEN TO EMAIL
 // -------------
@@ -827,7 +827,7 @@ $mail_settings['book_admin_on_approval'] = FALSE;  // the booking administrator 
 // (Note:  (a) the variables $mail_settings['admin_on_delete'] and
 // $mail_settings['admin_all'], which were used in MRBS versions 1.4.5 and
 // before are now deprecated.   They are still supported for reasons of backward
-// compatibility, but they may be withdrawn in the future.  (b)  the default 
+// compatibility, but they may be withdrawn in the future.  (b)  the default
 // value of $mail_settings['on_new'] is TRUE for compatibility with MRBS 1.4.5
 // and before, where there was no explicit config setting, but mails were always sent
 // for new bookings if there was somebody to send them to)
@@ -863,7 +863,7 @@ $mail_settings['admin_lang'] = 'en';   // Default is 'en'.
 // The email addresses of the MRBS administrator are set in the config file, and
 // those of the room and area administrators are set though the edit_area_room.php
 // in MRBS.    But if you have set $mail_settings['booker'] above to TRUE, MRBS will
-// need the email addresses of ordinary users.   If you are using the "db" 
+// need the email addresses of ordinary users.   If you are using the "db"
 // authentication method then MRBS will be able to get them from the users table.  But
 // if you are using any other authentication scheme then the following settings allow
 // you to specify a domain name that will be appended to the username to produce a
@@ -884,7 +884,7 @@ $mail_settings['admin_backend'] = 'mail';
 /*******************
  * Sendmail settings
  */
- 
+
 // Set the path of the Sendmail program (only used with "sendmail" backend).
 // Default is '/usr/bin/sendmail'
 $sendmail_settings['path'] = '/usr/bin/sendmail';
@@ -936,8 +936,8 @@ $mail_settings['debug'] = FALSE;
 // Set this to TRUE if you do not want any email sent, whatever the rest of the settings.
 // This is a global setting that will override anything else.   Useful when testing MRBS.
 $mail_settings['disabled'] = FALSE;
- 
- 
+
+
 /**********
  * Language
  **********/
@@ -965,7 +965,7 @@ $override_locale = "";
 // IF your language faq file is available, set $faqfilelang to match the
 // end of the file name, including the underscore (ie. for site_faq_fr.html
 // use "_fr"
-$faqfilelang = ""; 
+$faqfilelang = "";
 
 // Language selection when run from the command line
 $cli_language = "en";
@@ -987,7 +987,7 @@ $cli_language = "en";
 /*************
  * Reports
  *************/
- 
+
 // Default file names
 $report_filename  = "report";
 $summary_filename = "summary";
@@ -1005,7 +1005,7 @@ $csv_col_sep = ",";   // Separator between columns/fields
 // guaranteed to recognise utf-8, but does recognise utf-16, so the default setting
 // for $csv_charset is 'utf-16'. Setting $csv_charset to 'utf-8' and $csv_bom
 // to TRUE (ie requiring MRBS to output a Byte Order Mark) will make Excel
-// 2010 on Windows, and maybe earlier versions, work. 
+// 2010 on Windows, and maybe earlier versions, work.
 // But utf-8 with, or without, a BOM will not work on Excel 2011 for Mac.
 $csv_charset = 'utf-16';
 $csv_bom = TRUE;
@@ -1024,7 +1024,7 @@ $csv_bom = TRUE;
 // you can override the default descriptions by setting the $vocab_override config
 // variable.   For example, if you add a new booking type 'C' the minimum you need
 // to do is add a line to config.inc.php like:
-// 
+//
 // $vocab_override["en"]["type.C"] =     "New booking type";
 //
 // Below is a basic default array which ensures there are at least some types defined.
@@ -1035,8 +1035,8 @@ $csv_bom = TRUE;
 // have chosen in the config settings. (The default is default.inc, unsurprisingly!)
 //
 
-$booking_types[] = "E";
-$booking_types[] = "I";
+// $booking_types[] = "E";
+// $booking_types[] = "I";
 
 // Default type for new bookings
 $default_type = "I";
