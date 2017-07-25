@@ -9,6 +9,8 @@ try{
 
    $categorias = $query->fetchAll(PDO::FETCH_ASSOC);
 
+
+
    $id       = $result[0][id];
    $materia  = $result[0][materia];
    $creditos = $result[0][creditos];
@@ -26,25 +28,28 @@ if ($_GET[id] == 0){
   $creditos = "";
   $profesor = "";
   $horario  = "";
+  $titulo   = "Nueva Materia";
   } else {
 
        $query = $db->query('SELECT * FROM mrbs_materias where id=' . $_GET[id]);
 
        $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
+       $query = $db->query('SELECT categoria_id FROM mrbs_mat_cat where materia_id=' . $_GET[id]);
+
+       $mat_cat = $query->fetchAll(PDO::FETCH_ASSOC);
+
+
        $id       = $result[0][id];
        $materia  = $result[0][materia];
        $creditos = $result[0][creditos];
        $profesor = $result[0][profesor];
        $horario  = $result[0][horario];
+       $titulo   = "Editar Materia";
 
 }
 
 if ($_POST[materia] != ""){
-
-    // echo "<pre>";
-    // var_dump($_POST[categorias]);
-    // die();
 
     if ($_POST[id] == ""){
       $sql = "INSERT INTO mrbs_materias (materia, creditos, profesor, horario) VALUES ('". $_POST[materia] . "','" . $_POST[creditos] ."','". $_POST[profesor] . "','" . $_POST[horario] ."')";
@@ -61,8 +66,35 @@ if ($_POST[materia] != ""){
       $sql = "UPDATE mrbs_materias SET materia='". $_POST[materia] ."', creditos='" . $_POST[creditos] . "', profesor='" . $_POST[profesor] . "', horario='" . $_POST[horario] . "' WHERE id=" . $_POST[id];
       $stmt = $db->prepare($sql);
       $stmt->execute();
-      //Buscar en la tabla las categorias que tiene y luego comparar.
-      
+      //Que la base verifique el form y luego el form la base64_decode
+      $query = $db->query('SELECT id, categoria_id FROM mrbs_mat_cat where materia_id=' . $_POST[id]);
+
+      $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+      foreach ($result as $base_cat) {
+        $bien = false;
+        foreach ($_POST[categorias] as $form_cat) {
+          if ($base_cat[categoria_id] == $form_cat) {
+            $bien = true;
+          }
+        }
+        if (!$bien){
+          $sql_base = $sql_base . 'DELETE FROM mrbs_mat_cat WHERE id=' . $base_cat[id] . ';';
+        }
+      }
+      foreach ($_POST[categorias] as $form_cat) {
+        $bien = false;
+        foreach ($result as $base_cat) {
+          if ($form_cat == $base_cat[categoria_id]) {
+            $bien = true;
+          }
+        }
+        if (!$bien){
+          $sql_base = $sql_base . 'INSERT INTO mrbs_mat_cat (materia_id, categoria_id) VALUES (' . $_POST[id] .','. $form_cat  . ');';
+        }
+      }
+
+      $db->exec($sql_base);
 
       header("Location: ./materias.php");
       exit;
@@ -74,40 +106,50 @@ if ($_POST[materia] != ""){
 
  <form class="form_general" id="main" action="./materias-subir.php" method="post">
    <fieldset>
-     <legend>Nueva Materia</legend>
+     <legend><?php echo $titulo ?></legend>
 
      <div class="div_name">
        <label for="nombre" style="width: 10%">Id:</label>
-       <input type="text" name="id" value="<?php echo $id ?>" readonly placeholder="No Completar" style="width: 45em">
+       <input type="text" name="id" value="<?php echo $id ?>" readonly placeholder="No Completar" style="width: 45em" required>
      </div>
 
      <div class="div_name">
        <label for="nombre" style="width: 10%">Materia:</label>
-       <input type="text" name="materia" value="<?php echo $materia ?>" placeholder="Ej: Gestión del Conocimiento" style="width: 45em">
+       <input type="text" name="materia" value="<?php echo $materia ?>" placeholder="Ej: Gestión del Conocimiento" style="width: 45em" required>
      </div>
 
      <div class="div_creditos">
        <label for="creditos" style="width: 10%">Creditos:</label>
-       <input type="number" name="creditos" value="<?php echo $creditos ?>" min="1" max="3" placeholder="De 1 a 3 creditos" style="width: 45em">
+       <input type="number" name="creditos" value="<?php echo $creditos ?>" min="1" max="3" placeholder="De 1 a 3 creditos" style="width: 45em" required>
      </div>
 
      <div class="div_profesor">
        <label for="profesor" style="width: 10%">Profesor:</label>
-       <input type="text" name="profesor" value="<?php echo $profesor ?>" placeholder="Ej: Oscar Rodríguez Robledo, Tito Avalos" style="width: 45em">
+       <input type="text" name="profesor" value="<?php echo $profesor ?>" placeholder="Ej: Oscar Rodríguez Robledo, Tito Avalos" style="width: 45em" required>
      </div>
 
      <div class="div_horario">
        <label for="horario" style="width: 10%">Horario:</label>
-       <input type="text" name="horario" value="<?php echo $horario ?>" placeholder="9 a 12" style="width: 45em">
+       <input type="text" name="horario" value="<?php echo $horario ?>" placeholder="9 a 12" style="width: 45em" required>
      </div>
 
      <div class="" style="margin-top: 1em">
      <label for="categorias" style="width: 10%">Categorias:</label>
        <div class="group" style="width:90%">
          <?php
-         foreach ($categorias as $key => $value) {
+         foreach ($categorias as $value) {
            echo "<label style='width:28%'>";
-           echo "<input type='checkbox' name='categorias[]' value='". $value[id] ."'>" . $value[categoria];
+           $tilde = false;
+           foreach ($mat_cat as $value2) {
+             if ($value[id] == $value2[categoria_id]){
+               $tilde = true;
+             }
+           }
+           if ($tilde) {
+             echo "<input type='checkbox' name='categorias[]' value='". $value[id] ."' checked>" . $value[categoria];
+           } else {
+             echo "<input type='checkbox' name='categorias[]' value='". $value[id] ."'>" . $value[categoria];
+           }
            echo "</label>";
          }
          ?>

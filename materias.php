@@ -10,6 +10,14 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
 
    $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
+   $query = $db->query('SELECT * FROM mrbs_categorias');
+
+   $categorias = $query->fetchAll(PDO::FETCH_ASSOC);
+
+   $query = $db->query('SELECT * FROM mrbs_mat_cat');
+
+   $cat_mat = $query->fetchAll(PDO::FETCH_ASSOC);
+
  ?>
 
  <h2>Materias</h2>
@@ -28,8 +36,20 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
      echo "<td style='text-align: center'>" . $value[creditos] . "</td>";
      echo "<td>" . $value[profesor] . "</td>";
      echo "<td style='text-align: center'>" . $value[horario] . "</td>";
-     echo "<td></td>";
-     echo "</tr>";
+     echo "<td style='display: inline-flex; align-items: center'>";
+    foreach ($cat_mat as $value_cat) {
+      if ($value_cat[materia_id] == $value[id]) {
+        foreach ($categorias as $categoria) {
+          if ($categoria[id] == $value_cat[categoria_id]) {
+            $nom = $categoria[categoria];
+            $col = $categoria[color];
+          }
+        }
+        echo "<div class='color' title='" . $nom . "' style='background-color: " . $col . "; margin-right: 4px; height: 15px; width: 15px'></div>";
+      }
+    }
+    echo "</td>";
+    echo "</tr>";
    } ?>
  </table>
 

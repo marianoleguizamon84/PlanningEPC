@@ -12,16 +12,18 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
 
  ?>
 
- <h2>Categorias</h2>
+ <h2>Categorías</h2>
 
  <table class="admin_table display" style="margin-bottom: 1em">
    <tr>
-     <th>Categoria</th>
+     <th>Categoría</th>
+     <th>Código</th>
      <th>Color</th>
    </tr>
    <?php foreach ($result as $value) {
      echo "<tr>";
      echo "<td style='cursor:pointer' onclick=editar(" . $value[id] . ")>" . $value[categoria] . "</td>";
+     echo "<td>".$value[codigo]."</td>";
      echo "<td><div class='color' title='".$value[categoria]."' style='background-color: " . $value[color] . ";'></div></td>";
      echo "</tr>";
    } ?>
@@ -42,8 +44,12 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
          <input id="ide" type="number" name="ide" readonly placeholder="No Completar">
        </div>
        <div class="campo">
-         <label for="categoria">Categoria: </label>
+         <label for="categoria">Categoría: </label>
          <input id="categoria" type="text" name="categoria" placeholder="Ej: Obligatoria Todas Las Maestrías, Diplomatura Comunicación Interna">
+       </div>
+       <div class="campo">
+         <label for="codigo">Código: </label>
+         <input id="codigo" type="text" name="codigo" placeholder="Ej: MGCO, MGCC, DPA, DMM">
        </div>
        <div class="campo">
          <label for="color">Color: </label>
@@ -63,9 +69,10 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
    var categorias = <?php echo json_encode($result); ?>;
 
    agregar.onclick = function (){
-     document.getElementById('modal_Titulo').innerText = "Nueva Categoria"
+     document.getElementById('modal_Titulo').innerText = "Nueva Categoría"
      document.getElementById('ide').value = "";
      document.getElementById('categoria').value = "";
+     document.getElementById('codigo').value = "";
      document.getElementById('color').value = "";
      document.getElementById('enviar').value = "Crear";
      modal.style.display = "block";
@@ -85,12 +92,14 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
      for (var i = 0; i < categorias.length; i++) {
        if (categorias[i].id == id){
          var cat = categorias[i].categoria;
+         var cod = categorias[i].codigo;
          var col = categorias[i].color;
        }
      }
-     document.getElementById('modal_Titulo').innerText = "Editar Categoria"
+     document.getElementById('modal_Titulo').innerText = "Editar Categoría"
     document.getElementById('ide').value = id;
     document.getElementById('categoria').value = cat;
+    document.getElementById('codigo').value = cod;
     document.getElementById('color').value = col;
     document.getElementById('enviar').value = "Editar";
     modal.style.display = "block";
