@@ -2,6 +2,8 @@
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
+checkAuthorised();
+
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);

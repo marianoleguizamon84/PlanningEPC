@@ -2,6 +2,8 @@
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
+checkAuthorised();
+
 try{
   $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
   $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

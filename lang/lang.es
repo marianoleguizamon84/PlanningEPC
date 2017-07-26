@@ -397,17 +397,17 @@ $vocab["for_any_questions"]  = "para cualquier duda.";
 $vocab["failed_connect_db"]  = "Error: No se pudo conectar a la Base de Datos";
 
 // Entry types
-$vocab["type.I"]             = "MCP";
-$vocab["type.B"]             = "MCGC";
-$vocab["type.A"]             = "MGCO";
-$vocab["type.H"]             = "MGC";
-$vocab["type.K"]             = "Mat. Comunes";
-$vocab["type.E"]             = "Dipl. Espec.";
-$vocab["type.J"]             = "Progr. Ejec.";
-$vocab["type.G"]             = "Progr. On Line";
+$vocab["type.I"]             = "EPC";
+// $vocab["type.B"]             = "MCGC";
+// $vocab["type.A"]             = "EPC3";
+// $vocab["type.H"]             = "MGC";
+// $vocab["type.K"]             = "Mat. Comunes";
+// $vocab["type.E"]             = "EPC 2";
+// $vocab["type.J"]             = "Progr. Ejec.";
+// $vocab["type.G"]             = "Progr. On Line";
 
 // $vocab["type.C"]             = "Materia 3";
-$vocab["type.D"]             = "MCP";
+// $vocab["type.D"]             = "MCP";
 // $vocab["type.F"]             = "Materia 5";
 /*$vocab["type.I"]            = "Internal";
 $vocab["type.E"]            = "External";*/

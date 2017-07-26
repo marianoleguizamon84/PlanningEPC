@@ -216,7 +216,10 @@ function create_field_entry_name($disabled=FALSE)
 <script type="text/javascript">
 window.onload = function () {
   document.getElementById("name").addEventListener("change", cambiarDescripcion);
-  document.getElementById('description').innerText = <?php echo json_encode($array_description[0]) ?>;
+  var desc = document.getElementById('description').value;
+  if (desc == 'Docente: ') {
+    document.getElementById('description').innerText = <?php echo json_encode($array_description[0]) ?>;
+  }
 };
 function cambiarDescripcion(materias, descripciones){
   materias = <?php echo json_encode($array_materias); ?>;

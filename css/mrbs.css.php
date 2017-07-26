@@ -256,6 +256,7 @@ div.booking_list {position: relative; z-index: 20;                      /* conta
 
 <?php
 // Generate the classes to give the colour coding by booking type in the day/week/month views
+
 foreach ($color_types as $type => $col)
 {
   echo "td.$type {background-color: $col}\n";         // used in the day and week views

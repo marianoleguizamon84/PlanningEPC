@@ -1036,7 +1036,7 @@ $csv_bom = TRUE;
 //
 
 // $booking_types[] = "E";
-// $booking_types[] = "I";
+$booking_types[] = "I";
 
 // Default type for new bookings
 $default_type = "I";

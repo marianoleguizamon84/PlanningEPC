@@ -2,6 +2,8 @@
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
+checkAuthorised();
+
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
@@ -49,7 +51,7 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
        </div>
        <div class="campo">
          <label for="codigo">Código: </label>
-         <input id="codigo" type="text" name="codigo" placeholder="Ej: MGCO, MGCC, DPA, DMM">
+         <input id="codigo" type="text" name="codigo" style="text-transform: uppercase" maxlength="7" placeholder="Ej: MGCO, MGCC, DPA, DMM">
        </div>
        <div class="campo">
          <label for="color">Color: </label>

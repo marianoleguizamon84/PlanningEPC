@@ -12,7 +12,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   // $am7       the start of the first slot of the booking day (Unix timestamp)
   // $pm7       the start of the last slot of the booking day (Unix timestamp)
   // $format    time format used for indexing the $map array
-  
+
   // $row is expected to have the following field names, when present:
   //       room_id
   //       start_time
@@ -24,7 +24,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //       entry_description
   //       entry_create_by
   //       status
-  
+
   // $column is a column of the map of the screen that will be displayed
   // It looks like:
   //     $column[Time][n][id]
@@ -41,7 +41,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //                     [start_time]
   //                     [slots]
   //                     [status]
-  
+
   // slots records the duration of the booking in number of time slots.
   // Used to calculate how high to make the block used for clipping
   // overflow descriptions.
@@ -54,10 +54,10 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //
   // [n] exists because it's possible that there may be multiple bookings
   // in the same time slot.   Normally this won't be the case.   However it
-  // can arise legitimately if you increase the resolution, or shift the 
-  // displayed day.   For example if you previously had a resolution of 1800 
+  // can arise legitimately if you increase the resolution, or shift the
+  // displayed day.   For example if you previously had a resolution of 1800
   // seconds you might have a booking (A) for 1000-1130 and another (B) for 1130-1230.
-  // If you then increase the resolution to 3600 seconds, these two bookings 
+  // If you then increase the resolution to 3600 seconds, these two bookings
   // will both occupy the 1100-1200 time slot.   [n] starts at 0.   For
   // the example above the map for the room would look like this
   //
@@ -69,10 +69,10 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   // Note: int casts on database rows for max may be needed for PHP3.
   // Adjust the starting and ending times so that bookings which don't
   // start or end at a recognized time still appear.
-  
+
   global $resolution;
   global $is_private_field;
-  
+
   $user = getUserName();
   if (is_private_event($row['status'] & STATUS_PRIVATE) &&
          !getWritable($row['entry_create_by'], $user, $row['room_id']))
@@ -94,25 +94,25 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
 
   $is_multiday_start = ($row['start_time'] < $am7);
   $is_multiday_end = ($row['end_time'] > ($pm7 + $resolution));
-              
+
   $start_t = max(round_t_down($row['start_time'], $resolution, $am7), $am7);
   $end_t = min(round_t_up($row['end_time'], $resolution, $am7) - $resolution, $pm7);
   // calculate the times used for indexing
   $time_start_t = date($format,$start_t);
   $time_end_t = date($format,$end_t);
-  
+
 
   for ($t = $start_t; $t <= $end_t; $t += $resolution)
-  { 
+  {
     $time_t = date($format,$t);
-    
+
     // find the first free index (in case there are multiple bookings in a timeslot)
     $n = 0;
     while (!empty($column[$time_t][$n]["id"]))
     {
       $n++;
     }
-    
+
     // fill in the id, type and start time
     $column[$time_t][$n]["id"] = $row['entry_id'];
     $column[$time_t][$n]["is_repeat"] = !empty($row['repeat_id']);
@@ -139,17 +139,17 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
       $column[$time_t][$n]["room_id"] = "";
     }
   } // end for
-  
-  
+
+
   // Show the name of the booker, the description and the number of complete
-  // slots in the first complete slot that the booking happens in, or at the 
+  // slots in the first complete slot that the booking happens in, or at the
   // start of the day if it started before today.
 
   // Find the number of time slots that the booking occupies, and the index
   // of the first slot that this booking has entirely to itself
   $n_slots = intval(($end_t - $start_t)/$resolution) + 1;
   $first_slot = $start_t;
-  
+
   // If the last time slot is already occupied, we have a multiple
   // booking in the last slot, so decrement the number of slots that
   // we will display for this booking
@@ -158,7 +158,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     $n_slots--;
     // If we're only the second booking to land on this time slot
     // then we'll have to adjust the information held for the first booking
-    // (unless it's just one slot long in the first place, when it 
+    // (unless it's just one slot long in the first place, when it
     // doesn't matter as it will now be part of a multiple booking).
     // If we are the third booking or more, then it will have already
     // been adjusted.
@@ -175,7 +175,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
       }
     }
   }
-  
+
   // and if the first time slot is already occupied, decrement
   // again, adjust the first slot for this booking
   if (isset($column[$time_start_t][1]["id"]))
@@ -211,7 +211,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
         $s += $resolution;
         break;
       } // end while
-      
+
       // Now we've found the time ($s) of the first slot of the first booking
       // we need to find its index ($i)
       foreach ($column[date($format,$s)] as $i => $booking)
@@ -233,15 +233,15 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
       $column[$time_start_t][0]["room_id"] = $column[date($format,$s)][$i]["room_id"];
     }
   }
- 
+
   // now we've got all the information we can enter it in the first complete
   // slot for the booking (provided it's not a multiple booking slot)
   if (!isset($column[date($format,$first_slot)][1]["id"]))
   {
     $column[date($format,$first_slot)][0]["data"] = $row['name'];
     $column[date($format,$first_slot)][0]["long_descr"] = $row['entry_description'];
-    $column[date($format,$first_slot)][0]["create_by"] = $row['entry_create_by']; 
-    $column[date($format,$first_slot)][0]["room_id"] = $row['room_id']; 
+    $column[date($format,$first_slot)][0]["create_by"] = $row['entry_create_by'];
+    $column[date($format,$first_slot)][0]["room_id"] = $row['room_id'];
     $column[date($format,$first_slot)][0]["slots"] = $n_slots;
   }
 
@@ -255,7 +255,7 @@ function cell_html($cell, $query_strings)
   //
   // $cell is a two dimensional array that is part of the map of the whole
   // display and looks like this:
-  // 
+  //
   // $cell[n][id]
   //         [is_repeat]
   //         [is_multiday_start]
@@ -269,29 +269,29 @@ function cell_html($cell, $query_strings)
   //         [slots]
   //         [status]
   //
-  // where n is the number of the booking in the cell.    There can be none, one or many 
+  // where n is the number of the booking in the cell.    There can be none, one or many
   // bookings in a cell.    If there are no bookings then a blank cell is drawn with a link
   // to the edit entry form.     If there is one booking, then the booking is shown in that
-  // cell.    If there is more than one booking then all the bookings are shown, but they can 
+  // cell.    If there is more than one booking then all the bookings are shown, but they can
   // be shown in two different ways: minimised and maximised.   By default they are shown
   // minimised, so that the standard row height is preserved.   By clicking a control
   // the cell can be maximised.   (Multiple bookings can arise in a cell if the resolution
   // of an existing database in increased or the booking day is shifted).
-  
+
   // $query_strings is an array containg the query strings (or partial query strings) to be
   // appended to the link used for the cell.    It is indexed as follows:
   //    ['new_periods']   the string to be used for an empty cell if using periods
   //    ['new_times']     the string to be used for an empty cell if using times
   //    ['booking']       the string to be used for a full cell
-    
+
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
   global $enable_periods, $times_along_top, $show_plus_link;
   global $approval_enabled, $confirmation_enabled;
-  
+
   $html = '';
   $user = getUserName();
-  
+
   // if the time slot has got multiple bookings, then draw a mini-table
   if(isset($cell[1]["id"]))
   {
@@ -301,18 +301,18 @@ function cell_html($cell, $query_strings)
     {
       $n_bookings++;
     }
-    
+
     // Make the class maximized by default so that if you don't have JavaScript then
     // you can still see all the bookings.    If you have JavaScript it will overwrite
     // the class and make it minimized.
     $html .= "<td class=\"multiple_booking maximized\">\n";
-    
+
     // First draw the mini table
     $html .= "<div class=\"celldiv slots1 mini\">\n";
     $html .= "<div class=\"multiple_control\">+</div>\n";
     $html .= "<table>\n";
     $html .= "<tbody>\n";
-    
+
     $row_height = $main_cell_height - (($n_bookings-1) * $main_table_cell_border_width);   // subtract the borders (first row has no top border)
     $row_height = $row_height/$n_bookings;  // split what's left between the bookings
     $row_height = (int) ceil($row_height);  // round up, so that (a) there's no empty space at the bottom
@@ -365,7 +365,7 @@ function cell_html($cell, $query_strings)
     $html .= "</tbody>\n";
     $html .= "</table>\n";
     $html .= "</div>\n";
-    
+
     // Now draw the maxi table
     $html .= "<div class=\"maxi\">\n";
     $total_height = $n_bookings * $main_cell_height;
@@ -374,7 +374,7 @@ function cell_html($cell, $query_strings)
              "style =\"height: " . $total_height . "px; " .
                       "min-height: " . $total_height . "px; " .
                       "max-height: " . $total_height . "px; " .
-             "\">-</div>\n";  
+             "\">-</div>\n";
     $html .= "<table>\n";
     $html .= "<tbody>\n";
     for ($n=0; $n<$n_bookings; $n++)
@@ -417,22 +417,22 @@ function cell_html($cell, $query_strings)
       $html .= ($is_repeat) ? "<img class=\"repeat_symbol\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
       $html .= "$descr</a>\n";
       $html .= "</div>\n";
-     
+
       $html .= "</td>\n";
       $html .= "</tr>\n";
     }
     $html .= "</tbody>\n";
     $html .= "</table>\n";
     $html .= "</div>\n";
-    
+
     $html .= "</td>\n";
   }  // end of if isset ( ...[1]..)
-  
+
   // otherwise draw a cell, showing either the booking or a blank cell
   else
-  {  
+  {
     if(isset($cell[0]["id"]))
-    {       
+    {
       $id         = $cell[0]["id"];
       $is_repeat  = $cell[0]["is_repeat"];
       $is_multiday_start = $cell[0]["is_multiday_start"];
@@ -491,13 +491,13 @@ function cell_html($cell, $query_strings)
     {
       $c = "new";
     }
-    
+
     // Don't put in a <td> cell if the slot is booked and there's no description.
     // This would mean that it's the second or subsequent slot of a booking and so the
     // <td> for the first slot would have had a rowspan that extended the cell down for
     // the number of slots of the booking.
 
-    if (!(isset($id) && ($descr == ""))) 
+    if (!(isset($id) && ($descr == "")))
     {
       $html .= tdcell($c, $slots);
 
@@ -505,8 +505,8 @@ function cell_html($cell, $query_strings)
       if (!isset($id))
       {
         $html .= "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
-        $html .= "<a href=\"edit_entry.php?" . 
-                 (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) . 
+        $html .= "<a href=\"edit_entry.php?" .
+                 (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) .
                  "\">\n";
         if ($show_plus_link)
         {
@@ -528,7 +528,7 @@ function cell_html($cell, $query_strings)
       $html .= "</td>\n";
     }
   }
-  
+
   return $html;
 }  // end function draw_cell
 
@@ -542,14 +542,14 @@ function cell_html($cell, $query_strings)
 function time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url)
 {
   global $enable_periods, $periods;
-  
+
   $html = '';
-  
+
   $html .= tdcell("row_labels", 1, array('name' => 'seconds', 'value' => $slot_seconds));
   $html .= "<div class=\"celldiv slots1\">\n";
   if ( $enable_periods )
   {
-    
+
     $html .= "<a href=\"$url\"  title=\""
              . get_vocab("highlight_line") . "\">"
              . $periods[$time_t_stripped] . "</a>\n";
@@ -561,7 +561,7 @@ function time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url)
              . utf8_strftime(hour_min_format(),$t) . "</a>\n";
   }
   $html .= "</div></td>\n";
-  
+
   return $html;
 }
 
@@ -606,13 +606,13 @@ function day_cell_html($text, $link, $date)
 function tdcell($colclass, $slots)
 {
   global $times_along_top;
-  
+
   $html = '';
   if (func_num_args() > 2)
   {
     $data = func_get_arg(2);
   }
-  
+
   $html .= "<td class=\"$colclass\"";
   if ($slots > 1)
   // No need to output more HTML than necessary
@@ -624,7 +624,7 @@ function tdcell($colclass, $slots)
     $html .= " data-" . $data['name'] . "=\"" . $data['value'] . "\"";
   }
   $html .= ">\n";
-  
+
   return $html;
 }
 
@@ -635,14 +635,14 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
-  
+
   $sql = "SELECT COUNT(*)
             FROM $tbl_room R, $tbl_area A
            WHERE R.area_id=$area
              AND R.area_id = A.id
              AND R.disabled = 0
              AND A.disabled = 0";
-           
+
   $n_rooms = sql_query1($sql);
 
   if ($n_rooms < 0)
@@ -657,17 +657,17 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   }
 
   $format = ($enable_periods) ? "i" : "Gi";
-  
+
   // form the room parameter for use in query strings.    We want to preserve room information
   // if possible when switching between views
   $room_param = (empty($room)) ? "" : "&amp;room=$room";
-  
+
   // ensure that $morningstarts_minutes defaults to zero if not set
   if (!isset($morningstarts_minutes))
   {
     $morningstarts_minutes = 0;
   }
-  
+
   if ($enable_periods)
   {
     $resolution = 60;
@@ -688,9 +688,9 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
               $month, $day, $year, is_dst($month,$day,$year,$morningstarts));
   $pm7=mktime($eveningends, $eveningends_minutes, 0,
               $month, $day, $year, is_dst($month,$day,$year,$eveningends));
-            
+
   // We want to build an array containing all the data we want to show
-  // and then spit it out. 
+  // and then spit it out.
 
   // Get all appointments for today in the area that we care about.  We
   // only get the data for enabled rooms.  (If the whole area is disabled
@@ -732,7 +732,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     //  row['entry_description'] = description
     //  row['entry_create_by'] = Creator/owner of entry
     //  row['status'] = Status code of the entry
-  
+
     map_add_booking($row, $today[$row['room_id']][$day], $am7, $pm7, $format);
 
   }
@@ -759,14 +759,14 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
 
-  
+
   ($dst_change != -1) ? $j = 1 : $j = 0;
-  
+
   // TABLE HEADER
   $thead = "<thead>\n";
   $header_inner = "<tr>\n";
-  
-  
+
+
   // We can display the table in two ways
   if ($times_along_top)
   {
@@ -812,12 +812,12 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $header_inner .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
     }
   } // end "times_along_top" view (for the header)
-  
+
   else
   {
     // the standard view, with rooms along the top and times down the side
     $header_inner .= "<th class=\"first_last\">" . ($enable_periods ? get_vocab("period") : get_vocab("time")) . ":</th>";
-  
+
     $column_width = (int)(95 / sql_count($res));
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
@@ -828,39 +828,39 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
                         htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "") . "</a></th>";
       $rooms[] = $row['id'];
     }
-  
+
     // next line to display times on right side
     if ( FALSE != $row_labels_both_sides )
     {
       $header_inner .= "<th class=\"first_last\">" . ( $enable_periods  ? get_vocab("period") : get_vocab("time") ) . ":</th>";
     }
   }  // end standard view (for the header)
-  
+
   $header_inner .= "</tr>\n";
   $thead .= $header_inner;
   $thead .= "</thead>\n";
-  
+
   // Now repeat the header in a footer if required
   $tfoot = ($column_labels_both_ends) ? "<tfoot>\n$header_inner</tfoot>\n" : '';
 
   // TABLE BODY LISTING BOOKINGS
   $tbody = "<tbody>\n";
-  
+
   // This is the main bit of the display
   // We loop through time and then the rooms we just got
 
   // if the today is a day which includes a DST change then use
   // the day after to generate timesteps through the day as this
   // will ensure a constant time step
-  
+
   // URL for highlighting a time. Don't use REQUEST_URI or you will get
   // the timetohighlight parameter duplicated each time you click.
   $base_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area$room_param";
-  
-  
-   
+
+
+
   $row_class = "even_row";
-  
+
   // We can display the table in two ways
   if ($times_along_top)
   {
@@ -868,7 +868,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++, $row_class = ($row_class == "even_row")?"odd_row":"even_row")
     {
       $tbody .= "<tr class=\"$row_class\">\n";
-      $room_id = $row['id']; 
+      $room_id = $row['id'];
       $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room_id";
       $tbody .= room_cell_html($row, $room_cell_link);
       for (
@@ -881,11 +881,11 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
         $time_t = date($format, $t);
         // and get a stripped version of the time for use with periods
         $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-        
+
         // calculate hour and minute (needed for links)
         $hour = date("H", $t);
         $minute = date("i", $t);
-        
+
         // set up the query strings to be used for the link in the cell
         $query_strings = array();
         $query_strings['new_periods'] = "area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
@@ -895,7 +895,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
         if (!isset($today[$room_id][$day][$time_t]))
         {
           $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
-        }   
+        }
         $tbody .= cell_html($today[$room_id][$day][$time_t], $query_strings);
       }  // end for (looping through the times)
       if ( FALSE != $row_labels_both_sides )
@@ -905,7 +905,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $tbody .= "</tr>\n";
     }  // end for (looping through the rooms)
   }  // end "times_along_top" view (for the body)
-  
+
   else
   {
     // the standard view, with rooms along the top and times down the side
@@ -922,11 +922,11 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $time_t = date($format, $t);
       // and get a stripped version of the time for use with periods
       $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-      
+
       // calculate hour and minute (needed for links)
       $hour = date("H", $t);
       $minute = date("i", $t);
-  
+
       // Show the time linked to the URL for highlighting that time
       $class = $row_class;
       if (isset($timetohighlight) && ($time_t == $timetohighlight))
@@ -940,7 +940,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       }
       $tbody .= "<tr class=\"$class\">\n";
       $tbody .= time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url);
-  
+
       // Loop through the list of rooms we have for this area
       while (list($key, $room_id) = each($rooms))
       {
@@ -956,20 +956,20 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
         }
         $tbody .= cell_html($today[$room_id][$day][$time_t], $query_strings);
       }
-      
+
       // next lines to display times on right side
       if ( FALSE != $row_labels_both_sides )
       {
         $tbody .= time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url);
       }
-  
+
       $tbody .= "</tr>\n";
       reset($rooms);
     }
   }  // end standard view (for the body)
-  
+
   $tbody .= "</tbody>\n";
-  
+
   return $thead . $tfoot . $tbody;
 }
 
@@ -989,15 +989,15 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
              AND R.area_id=A.id
              AND R.disabled=0
              AND A.disabled = 0";
-             
+
   if (sql_query1($sql) != 1)
   {
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
     return "<tbody data-empty=1><tr><td><h1>".get_vocab("no_rooms_for_area")."</h1></td></tr></tbody>";
   }
-  
+
   $num_of_days=7; // days in a week
-  
+
   $format = ($enable_periods) ? "i" : "Gi";
 
   // ensure that $morningstarts_minutes defaults to zero if not set
@@ -1005,7 +1005,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   {
     $morningstarts_minutes = 0;
   }
-  
+
   if( $enable_periods )
   {
     $resolution = 60;
@@ -1014,7 +1014,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     $eveningends = 12;
     $eveningends_minutes = count($periods) - 1;
   }
-  
+
   // Calculate how many days to skip back to get to the start of the week
   $time = mktime(12, 0, 0, $month, $day, $year);
   $skipback = day_of_MRBS_week($time);
@@ -1078,7 +1078,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     // should be labeled,  which is once for each meeting on each weekday.
     // Note: weekday here is relative to the $weekstarts configuration variable.
     // If 0, then weekday=0 means Sunday. If 1, weekday=0 means Monday.
-  
+
     $res = sql_query($sql);
     if (! $res)
     {
@@ -1092,7 +1092,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
         map_add_booking($row, $week_map[$room][$j], $am7[$j], $pm7[$j], $format);
       }
     }
-  } 
+  }
 
   // START DISPLAYING THE MAIN TABLE
   // if the first day of the week to be displayed contains a DST change then
@@ -1156,7 +1156,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     if ( FALSE != $row_labels_both_sides )
     {
       $header_inner .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
-    } 
+    }
   } // end "times_along_top" view (for the header)
 
   else
@@ -1167,19 +1167,19 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     {
       $t = mktime( 12, 0, 0, $month, $day_start_week+$j, $year);
       $date = date('Y-n-d', $t);
-    
+
       if (is_hidden_day(($j + $weekstarts) % 7))
       {
         // These days are to be hidden in the display (as they are hidden, just give the
-        // day of the week in the header row 
+        // day of the week in the header row
         $header_inner .= "<th class=\"hidden_day\">" . utf8_strftime($strftime_format['dayname_cal'], $t) . "</th>\n";
       }
-  
-      else  
+
+      else
       {
         // Put the date into a data attribute so that it can be picked up by JavaScript
-        $header_inner .= "<th data-date=\"$date\"><a href=\"day.php?year=" . strftime("%Y", $t) . 
-                         "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
+        $header_inner .= "<th data-date=\"$date\"><a href=\"day.php?year=" . strftime("%Y", $t) .
+                         "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) .
                          "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">" .
                          utf8_strftime($dformat, $t) . "</a></th>\n";
       }
@@ -1222,23 +1222,23 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
         $row_class = ($row_class == "even_row")?"odd_row":"even_row";
         continue;
       }
-    
+
       else
       {
         $tbody .= "<tr class=\"$row_class\">\n";
-      
+
         $wt = mktime( 12, 0, 0, $month, $day_start_week+$thisday, $year );
         $wday = date("d", $wt);
         $wmonth = date("m", $wt);
         $wyear = date("Y", $wt);
         $wdate = date('Y-n-d', $wt);
-      
+
         $day_cell_text = utf8_strftime($dformat, $wt);
-        $day_cell_link = "day.php?year=" . strftime("%Y", $wt) . 
-                         "&amp;month=" . strftime("%m", $wt) . 
-                         "&amp;day=" . strftime("%d", $wt) . 
+        $day_cell_link = "day.php?year=" . strftime("%Y", $wt) .
+                         "&amp;month=" . strftime("%m", $wt) .
+                         "&amp;day=" . strftime("%d", $wt) .
                          "&amp;area=$area";
-                       
+
         $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
         for (
              $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
@@ -1250,17 +1250,17 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
           $time_t = date($format, $t);
           // and get a stripped version for use with periods
           $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-        
+
           // calculate hour and minute (needed for links)
           $hour = date("H",$t);
           $minute  = date("i",$t);
-        
+
           // set up the query strings to be used for the link in the cell
           $query_strings = array();
           $query_strings['new_periods'] = "room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
           $query_strings['new_times']   = "room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
           $query_strings['booking']     = "area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear";
-        
+
           // and then draw the cell
           if (!isset($week_map[$room][$thisday][$time_t]))
           {
@@ -1274,9 +1274,9 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
         }
         $tbody .= "</tr>\n";
       }
-    
+
     }  // end looping through the days of the week
-  
+
   } // end "times along top" view (for the body)
 
   else
@@ -1295,11 +1295,11 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
       $time_t = date($format, $t);
       // and get a stripped version for use with periods
       $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-    
+
       // calculate hour and minute (needed for links)
       $hour = date("H",$t);
       $minute  = date("i",$t);
-    
+
       // Show the time linked to the URL for highlighting that time:
       $class = $row_class;
       if (isset($timetohighlight) && ($time_t == $timetohighlight))
@@ -1313,8 +1313,8 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
       }
       $tbody.= "<tr class=\"$class\">";
       $tbody .= time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url);
-  
-  
+
+
       // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
       for ($thisday = 0; $thisday<=($num_of_days-1) ; $thisday++)
       {
@@ -1330,12 +1330,12 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
           $wday = date("d", $wt);
           $wmonth = date("m", $wt);
           $wyear = date("Y", $wt);
-        
+
           $query_strings = array();
           $query_strings['new_periods'] = "room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
           $query_strings['new_times']   = "room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
           $query_strings['booking']     = "area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear";
-        
+
           // and then draw the cell
           if (!isset($week_map[$room][$thisday][$time_t]))
           {
@@ -1343,19 +1343,19 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
           }
           $tbody .= cell_html($week_map[$room][$thisday][$time_t], $query_strings);
         }
-  
+
       }    // for loop
-  
+
       // next lines to display times on right side
       if ( FALSE != $row_labels_both_sides )
         {
           $tbody .= time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url);
         }
-  
+
       $tbody .= "</tr>\n";
     }
   }  // end standard view (for the body)
   $tbody .= "</tbody>\n";
-  
+
   return $thead . $tfoot . $tbody;
 }
