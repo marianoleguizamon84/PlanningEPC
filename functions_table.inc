@@ -2,6 +2,8 @@
 
 // $Id: functions_table.inc 2374 2012-08-12 19:11:43Z cimorrison $
 
+
+
 function map_add_booking ($row, &$column, $am7, $pm7, $format)
 {
   // Enters the contents of the booking found in $row into $column, which is
@@ -517,12 +519,14 @@ function cell_html($cell, $query_strings)
       }
       else                 // if it is booked then show the booking
       {
+        $cat = categoria($long_descr);
+
         $html .= "<div data-id=\"$id\" class=\"celldiv slots" .
                  (($times_along_top) ? "1" : $slots) .
                  "\">\n";
-        $html .= "<a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">";
+        $html .= "<a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\" style='min-height: 17px'>";
         $html .= ($is_repeat) ? "<img class=\"repeat_symbol $c\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
-        $html .= "$descr</a>\n";
+        $html .= "$descr </a><div style='display: flex'> $cat </div>";
         $html .= "</div>\n";
       }
       $html .= "</td>\n";
@@ -532,6 +536,22 @@ function cell_html($cell, $query_strings)
   return $html;
 }  // end function draw_cell
 
+function categoria($long_descr){
+  // include 'systemdefaults.inc';
+  // include 'mrbs_sql.inc';
+  $db = new PDO('mysql:host=localhost;dbname=planningfc_qa_db;charset=utf8mb4;port:3306', 'PlannFC_QAUser', 'UAplanningfc.125');
+  // $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
+  $query = $db->query('SELECT * FROM mrbs_categorias');
+  $categorias = $query->fetchAll(PDO::FETCH_ASSOC);
+
+  foreach ($categorias as $value) {
+    $existe = stripos($long_descr, $value[codigo]);
+    if ($existe) {
+      $result = $result . '<div style="height:10px; width:10px; border-radius:50px; margin-left: 2px ; background-color: '.$value[color].'" title="' . $value[categoria] . ' ('.$value[codigo].')"></div>';
+    }
+  }
+return $result;
+}
 
 // Draw a time cell to be used in the first and last columns of the day and week views
 //    $t                 the timestamp for the start of the slot

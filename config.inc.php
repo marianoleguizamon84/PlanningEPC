@@ -71,7 +71,6 @@ $mrbs_company_url = "http://www.austral.edu.ar/posgrados-comunicacion/";
 $mrbs_admin = "Mariano Leguizamon";
 $mrbs_admin_email = "mleguizamon-cronon@austral.edu.ar";
 
-#$select_options ['entry.description'] = array('Alejandra', 'Tito');
 
 #Las letras "E" e "I" estan en el archivo systemdefaults.inc.php. Tiraba error cuando las pase a este archivo.
 // $booking_types[] = "A";

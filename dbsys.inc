@@ -71,7 +71,7 @@ function sql_escape($str)
     $db_sys = $dbsys;
     $db_conn = null;
   }
-  
+
   $f = "sql_${db_sys}_escape";
   return $f($str, $db_conn);
 }
@@ -136,9 +136,9 @@ function sql_query_array($sql)
   {
     $db_conn = NULL;
   }
-  
+
   $res = ($db_conn) ? sql_query($sql, $db_conn) : sql_query($sql);
-  
+
   if ($res === FALSE)
   {
     return FALSE;
@@ -666,8 +666,8 @@ function sql_table_exists($table)
 //  'type'        the type as reported by MySQL or PostgreSQL
 //  'nature'      the type mapped onto one of a generic set of types
 //                (boolean, integer, real, character, binary).   This enables
-//                the nature to be used by MRBS code when deciding how to 
-//                display fields, without MRBS having to worry about the 
+//                the nature to be used by MRBS code when deciding how to
+//                display fields, without MRBS having to worry about the
 //                differences between MySQL and PostgreSQL type names.
 //  'length'      the maximum length of the field in bytes, octets or characters
 //                (Note:  this could be NULL)
@@ -675,13 +675,13 @@ function sql_table_exists($table)
 //
 //  NOTE: the type mapping is incomplete and just covers the types commonly
 //  used by MRBS
-// 
+//
 // The difficulty is that MySQL and PostgreSQL return different formats
 // of answer for the type of field when using sql_field_type.    For example
 // for a smallint, PostgreSQL will just return int, and there is no exact equivalent
 // of the mysql_ field_ len() function.   Although pg_field_size is a close
 // approximation and returns 2 for a smallint, enabling it to be distinguished
-// from an int, when used with variable length character types such as text or 
+// from an int, when used with variable length character types such as text or
 // varying character it returns -1.
 //
 // [There must be a better way of doing all this???!]
@@ -700,7 +700,7 @@ function sql_field_info($table)
     $db_sys = $dbsys;
     $db_conn = null;
   }
-  
+
   $f = "sql_${db_sys}_field_info";
   return $f($table, $db_conn);
 }
@@ -777,18 +777,18 @@ if (sql_table_exists($tbl_variables))
                                           "WHERE variable_name = 'db_version'");
   $current_local_db_schema_version = sql_query1("SELECT variable_content ".
                                                 "FROM $tbl_variables ".
-                                                "WHERE variable_name = 'local_db_version'");                                            
+                                                "WHERE variable_name = 'local_db_version'");
   if ($current_local_db_schema_version < 0)
   {
     $current_local_db_schema_version = 0;
   }
 }
 
-// If either of the database schema version numbers are out of date, then 
+// If either of the database schema version numbers are out of date, then
 // upgrade the database - provided of course that the entry table exists.
 // (We check that the entry table exists just in case this is a new installation
 // and they've forgotten to create the database tables)
-if ((($current_db_schema_version < $db_schema_version) || 
+if ((($current_db_schema_version < $db_schema_version) ||
      ($current_local_db_schema_version < $local_db_schema_version)) &&
     sql_table_exists($tbl_entry))
 {
@@ -801,9 +801,9 @@ if ((($current_db_schema_version < $db_schema_version) ||
   // which are not available until after the database upgrade or (b) use
   // functions which are not available until after dbsys has run.
   print_simple_header();
- 
+
   echo "<h1>" . get_vocab("mrbs") . "</h1>\n";
-  echo "<p class=\"error\">" . get_vocab("upgrade_required") . "</p>\n"; 
+  echo "<p class=\"error\">" . get_vocab("upgrade_required") . "</p>\n";
 
   // We need to open a connection to the database with a database
   // username that has admin rights.
@@ -815,7 +815,7 @@ if ((($current_db_schema_version < $db_schema_version) ||
     {
       // Get a username and password if we haven't got them
       echo "<p>" . get_vocab("supply_userpass") . "</p>\n";
-      echo "<p>" . get_vocab("contact_admin") . "</p>\n"; 
+      echo "<p>" . get_vocab("contact_admin") . "</p>\n";
       db_get_userpass();
     }
     else
@@ -841,7 +841,7 @@ if ((($current_db_schema_version < $db_schema_version) ||
   {
     $ok = upgrade_database(TRUE, $current_local_db_schema_version, $local_db_schema_version, $admin_handle);
   }
-  
+
   // close the database connection that has admin rights
   sql_close($admin_handle);
 
