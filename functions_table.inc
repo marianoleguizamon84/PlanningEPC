@@ -537,15 +537,12 @@ function cell_html($cell, $query_strings)
 }  // end function draw_cell
 
 function categoria($long_descr){
-  // include 'systemdefaults.inc';
-  // include 'mrbs_sql.inc';
   $db = new PDO('mysql:host=localhost;dbname=planningfc_qa_db;charset=utf8mb4;port:3306', 'PlannFC_QAUser', 'UAplanningfc.125');
-  // $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
   $query = $db->query('SELECT * FROM mrbs_categorias');
   $categorias = $query->fetchAll(PDO::FETCH_ASSOC);
 
   foreach ($categorias as $value) {
-    $existe = stripos($long_descr, $value[codigo]);
+    $existe = stripos($long_descr, "(".$value[codigo].")");
     if ($existe) {
       $result = $result . '<div style="height:10px; width:10px; border-radius:50px; margin-left: 2px ; background-color: '.$value[color].'" title="' . $value[categoria] . ' ('.$value[codigo].')"></div>';
     }
