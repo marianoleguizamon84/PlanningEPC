@@ -2,7 +2,9 @@
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-checkAuthorised();
+// checkAuthorised();
+$user = getUserName();
+$puede = auth_book_admin($user);
 
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
@@ -28,7 +30,11 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
    </tr>
    <?php foreach ($result as $value) {
      echo "<tr>";
-     echo "<td><a href='./materias-subir.php?id=".$value[id]."'>" . $value[materia] . "</a></td>";
+     if ($puede) {
+       echo "<td><a href='./materias-subir.php?id=".$value[id]."'>" . $value[materia] . "</a></td>";
+     } else {
+       echo "<td>" . $value[materia] . "</td>";
+     }
      echo "<td style='text-align: center'>" . $value[creditos] . "</td>";
      echo "<td>" . $value[profesor] . "</td>";
      echo "<td style='text-align: center'>" . $value[horario] . "</td>";
