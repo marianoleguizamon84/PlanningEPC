@@ -18,6 +18,7 @@ try{
    $creditos = $result[0][creditos];
    $profesor = $result[0][profesor];
    $horario  = $result[0][horario];
+   $url      = $result[0][url];
     }
   catch(PDOException $e)
     {
@@ -30,6 +31,7 @@ if ($_GET[id] == 0){
   $creditos = "";
   $profesor = "";
   $horario  = "";
+  $url      = "";
   $titulo   = "Nueva Materia";
   } else {
 
@@ -47,6 +49,7 @@ if ($_GET[id] == 0){
        $creditos = $result[0][creditos];
        $profesor = $result[0][profesor];
        $horario  = $result[0][horario];
+       $url      = $result[0][url];
        $titulo   = "Editar Materia";
 
 }
@@ -54,7 +57,7 @@ if ($_GET[id] == 0){
 if ($_POST[materia] != ""){
 
     if ($_POST[id] == ""){
-      $sql = "INSERT INTO mrbs_materias (materia, creditos, profesor, horario) VALUES ('". $_POST[materia] . "','" . $_POST[creditos] ."','". $_POST[profesor] . "','" . $_POST[horario] ."')";
+      $sql = "INSERT INTO mrbs_materias (materia, creditos, profesor, horario, url) VALUES ('". $_POST[materia] . "','" . $_POST[creditos] ."','". $_POST[profesor] . "','" . $_POST[horario] ."','" . $_POST[url] . "')";
       $db->exec($sql);
       $nuevo_id = $db->lastInsertId();
       $sql2 = "";
@@ -65,7 +68,7 @@ if ($_POST[materia] != ""){
       header("Location: ./materias.php");
       exit;
     } else {
-      $sql = "UPDATE mrbs_materias SET materia='". $_POST[materia] ."', creditos='" . $_POST[creditos] . "', profesor='" . $_POST[profesor] . "', horario='" . $_POST[horario] . "' WHERE id=" . $_POST[id];
+      $sql = "UPDATE mrbs_materias SET materia='". $_POST[materia] ."', creditos='" . $_POST[creditos] . "', profesor='" . $_POST[profesor] . "', horario='" . $_POST[horario] . "', url='" . $_POST[url] . "' WHERE id=" . $_POST[id];
       $stmt = $db->prepare($sql);
       $stmt->execute();
       //Que la base verifique el form y luego el form la base64_decode
@@ -133,6 +136,11 @@ if ($_POST[materia] != ""){
      <div class="div_horario">
        <label for="horario" style="width: 10%">Horario:</label>
        <input type="text" name="horario" value="<?php echo $horario ?>" placeholder="9 a 12" style="width: 45em" required>
+     </div>
+
+     <div class="div_url">
+       <label for="url" style="width: 10%">Horario:</label>
+       <input type="text" name="url" value="<?php echo $url ?>" placeholder="http://materia.austral.edu.ar" style="width: 45em" required>
      </div>
 
      <div class="" style="margin-top: 1em">

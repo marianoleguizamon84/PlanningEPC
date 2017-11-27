@@ -520,13 +520,20 @@ function cell_html($cell, $query_strings)
       else                 // if it is booked then show the booking
       {
         $cat = categoria($long_descr);
+        $user = getUserName();
+        $puede = auth_book_admin($user);
+        $url = getUrl($descr);
 
         $html .= "<div data-id=\"$id\" class=\"celldiv slots" .
                  (($times_along_top) ? "1" : $slots) .
                  "\">\n";
-        $html .= "<a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\" style='min-height: 17px'>";
+                 if ($puede) {
+                   $html .= "<a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\" style='min-height: 17px'>";
+                 } else {
+                   $html .= "<a href='" . $url . "' title=\"$long_descr\" style='min-height: 17px' target='_blank'>";
+                 }
         $html .= ($is_repeat) ? "<img class=\"repeat_symbol $c\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
-        $html .= "$descr </a><div style='display: flex'> $cat </div>";
+        $html .= "$descr</a><div style='display: flex'> $cat </div>";
         $html .= "</div>\n";
       }
       $html .= "</td>\n";
@@ -537,7 +544,8 @@ function cell_html($cell, $query_strings)
 }  // end function draw_cell
 
 function categoria($long_descr){
-  $db = new PDO('mysql:host=localhost;dbname=planningfc_qa_db;charset=utf8mb4;port:3306', 'PlannFC_QAUser', 'UAplanningfc.125');
+  global $db_host, $db_database, $db_login, $db_password;
+  $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
   $query = $db->query('SELECT * FROM mrbs_categorias');
   $categorias = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -548,6 +556,18 @@ function categoria($long_descr){
     }
   }
 return $result;
+}
+
+function getUrl($descr){
+  global $db_host, $db_database, $db_login, $db_password;
+  $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf8mb4;port:3306', $db_login, $db_password);
+  $query = $db->query('SELECT url FROM mrbs_materias where materia = "' . $descr . '"');
+  $result = $query->fetchAll(PDO::FETCH_ASSOC);
+  if ($result[0][url] == "") {
+    return "http://www.austral.edu.ar/posgrados-comunicacion/";
+  } else {
+    return $result[0][url];
+  }
 }
 
 // Draw a time cell to be used in the first and last columns of the day and week views

@@ -26,6 +26,7 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
      <th>Creditos</th>
      <th>Profesor</th>
      <th>Horario</th>
+     <th>URL</th>
      <th>Categorias</th>
    </tr>
    <?php foreach ($result as $value) {
@@ -38,6 +39,7 @@ $db = new PDO('mysql:host=' . $db_host . ';dbname='. $db_database .';charset=utf
      echo "<td style='text-align: center'>" . $value[creditos] . "</td>";
      echo "<td>" . $value[profesor] . "</td>";
      echo "<td style='text-align: center'>" . $value[horario] . "</td>";
+     echo "<td><a href='" . $value[url] . "' target='_blank'>" . $value[url] . "</a></td>";
      echo "<td style='display: inline-flex; align-items: center'>";
      foreach ($cat_mat as $value_cat) {
        if ($value_cat[materia_id] == $value[id]) {
